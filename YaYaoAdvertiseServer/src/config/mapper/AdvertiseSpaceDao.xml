@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.nieyue.dao.AdvertiseSpaceDao">
+<!-- 添加广告位 -->
+<insert id="addAdvertiseSpace" parameterType="AdvertiseSpace" flushCache="true"  >  
+   INSERT IGNORE INTO
+   		  advertise_space_tb 
+   		 (name,
+   		  platform,
+   		  type,
+   		  location,
+   		  status,
+   		  update_date,
+   		 admin_id)
+   VALUES
+    	 (#{name},
+    	 #{platform},
+    	 #{type},
+    	 #{location},
+    	 #{status},
+    	 #{updateDate},
+    	 #{adminId})  
+</insert>  
+<!-- 更新广告位 -->
+<update id="updateAdvertiseSpace" parameterType="AdvertiseSpace" >  
+    UPDATE 
+    	advertise_space_tb 
+    SET 
+    	name=#{name},
+    	platform=#{platform},
+    	type=#{type},
+    	location=#{location},
+    	status=#{status},
+    	update_date=#{updateDate},
+    	admin_id=#{adminId}
+    WHERE
+    	 advertise_space_id=#{advertiseSpaceId} 
+</update> 
+<!-- 删除广告位-->
+<delete id="delAdvertiseSpace"  parameterType="Integer" >  
+    DELETE FROM
+    	 advertise_space_tb 
+    	 WHERE advertise_space_id=#{advertiseSpaceId}
+</delete>  
+<!-- 加载广告位-->
+<select id="loadAdvertiseSpace" parameterType="Integer" resultType="AdvertiseSpace" >
+SELECT 
+		advertise_space_id,
+	 	name,
+    	platform,
+    	type,
+    	location,
+    	status,
+    	update_date,
+    	admin_id
+FROM advertise_space_tb 
+WHERE advertise_space_id=#{advertiseSpaceId}
+</select>
+
+<!-- 分页查询广告位-->
+<select id="browsePagingAdvertiseSpace" resultType="AdvertiseSpace">  
+    SELECT
+	    advertise_space_id,
+	 	name,
+    	platform,
+    	type,
+    	location,
+    	status,
+    	update_date,
+    	admin_id
+	FROM advertise_space_tb
+	ORDER BY
+		${orderName}  ${orderWay}
+	LIMIT
+		#{pageNum},#{pageSize}
+</select> 
+
+<!-- 统计记录条数 -->
+<select id="countAll"  resultType="int">  
+	SELECT
+	 	count(advertise_space_id)
+	FROM advertise_space_tb
+</select>   
+   
+ 
+</mapper>
