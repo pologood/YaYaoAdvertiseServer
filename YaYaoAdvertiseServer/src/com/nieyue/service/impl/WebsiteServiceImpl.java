@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nieyue.bean.Website;
 import com.nieyue.dao.WebsiteDao;
 import com.nieyue.service.WebsiteService;
-@Service("WebsiteService")
+@Service("websiteService")
 public class WebsiteServiceImpl implements WebsiteService{
 	@Resource
 	WebsiteDao websiteDao;
