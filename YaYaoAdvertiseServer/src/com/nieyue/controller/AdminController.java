@@ -151,6 +151,38 @@ public class AdminController {
 		return StateResult.getSR(um);
 	}
 	/**
+	 * 注册
+	 * @return
+	 */
+	@RequestMapping(value = "/register", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody  StateResult registerAdmin(
+			@RequestParam(value="adminName")String adminName,@RequestParam(value="password")String password,
+			@RequestParam(value="roleId")Integer roleId,HttpSession session)  {
+		       
+		       //不能添加相同的手机号或者邮箱
+				List<String> lp = adminService.browseAllAdminPhone();
+				List<String> le = adminService.browseAllAdminEmail();
+				for (int i = 0; i < lp.size(); i++) {
+					if(lp.get(i).equals(adminName)){
+						return StateResult.getSlefSR(40002, "手机已经存在");
+					}
+				}
+				for (int i = 0; i < le.size(); i++) {
+					if(le.get(i).equals(adminName)){
+						return StateResult.getSlefSR(40002, "email已经存在");
+					}
+				}
+				
+				Admin admin =new Admin();
+				admin.setPassword( MyDESutil.getMD5(password));
+				
+				boolean am = adminService.addAdmin(admin);
+				session.setAttribute("admin", admin);
+				Role role = roleService.loadRole(roleId);
+				session.setAttribute("role", role);
+				return StateResult.getSR(am);
+	}
+	/**
 	 * 管理员增加
 	 * @return 
 	 */

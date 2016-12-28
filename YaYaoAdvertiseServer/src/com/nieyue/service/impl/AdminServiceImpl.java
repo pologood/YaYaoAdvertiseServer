@@ -19,6 +19,7 @@ public class AdminServiceImpl implements AdminService{
 	public boolean addAdmin(Admin admin) {
 		admin.setCreateDate(new Date());
 		admin.setLastLoginDate(new Date());
+		admin.setStatus("审核中");
 		boolean b = adminDao.addAdmin(admin);
 		return b;
 	}
