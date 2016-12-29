@@ -22,6 +22,10 @@ public interface AdminService {
 	public Admin loginAdmin(String adminName,String password);
 	/** 管理员 总共数目 */	
 	public int countAll();	
+	/** 根据角色选择管理员 总共数目 */	
+	public int countAllByRoleId(Integer roleId);
+	/** 根据角色选择管理员 分页信息 */
+	public List<Admin> browsePagingAdminByRoleId(Integer roleId,int pageNum,int pageSize,String orderName,String orderWay) ;		
 	/** 管理员 分页信息 */
 	public List<Admin> browsePagingAdmin(int pageNum,int pageSize,String orderName,String orderWay);		
 	/** 所有登录手机号 */	

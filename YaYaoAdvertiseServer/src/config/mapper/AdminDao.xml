@@ -158,6 +158,33 @@ AND password=#{password}
 	LIMIT
 		#{pageNum},#{pageSize}
 </select> 
+<!-- 根据角色分页查询管理员-->
+<select id="browsePagingAdminByRoleId" resultType="Admin">  
+    SELECT
+	     admin_id,
+	 	 name,
+   		 cell_phone,
+   		 email,
+   		 password,
+   		 money,
+   		 identity_cards,
+   		 qq,
+   		 wechat,
+   		 bank_user_name,
+   		 bank_name,
+   		 bank_account,
+   		 bank_address,
+   		 status,
+   		 create_date,
+   		 last_login_date,
+   		 role_id
+	FROM admin_tb
+	WHERE role_id=#{roleId}
+	ORDER BY
+		${orderName}  ${orderWay}
+	LIMIT
+		#{pageNum},#{pageSize}
+</select> 
 <!-- 查询全部管理员-->
 <select id="browseAllAdmin" resultType="Admin">  
     SELECT
@@ -188,6 +215,13 @@ AND password=#{password}
 	SELECT
 	 	count(admin_id)
 	FROM admin_tb
+</select>   
+<!-- 根据角色统计记录条数 -->
+<select id="countAllByRoleId"  resultType="int">  
+	SELECT
+	 	count(admin_id)
+	FROM admin_tb
+	WHERE role_id=#{roleId}
 </select>   
    
  

@@ -70,5 +70,29 @@ public class ThirdParty {
 	 *放肆约api 
 	 */
 	public static String WEIXIN_FANGSIYUE_API="WEIXIN_FANGSIYUE_API";
+	/**
+	 *阿里大鱼APPKEY
+	 */
+	public static String ALIBABA_SMS_APPKEY="ALIBABA_SMS_APPKEY";
+	/**
+	 *阿里大鱼APPSECRET
+	 */
+	public static String ALIBABA_SMS_APPSECRET="ALIBABA_SMS_APPSECRET";
+	/**
+	 *阿里大鱼 模板id
+	 */
+	public static String ALIBABA_SMS_TEMPLATE_CODE_ID="ALIBABA_SMS_TEMPLATE_CODE_ID";
+	/**
+	 *阿里大鱼 签名 
+	 */
+	public static String ALIBABA_SMS_SIGN_NAME="ALIBABA_SMS_SIGN_NAME";
+	/**
+	 *阿里百川APPKEY
+	 */
+	public static String ALIBABA_IM_APPKEY="ALIBABA_IM_APPKEY";
+	/**
+	 *阿里百川APPSECRET
+	 */
+	public static String ALIBABA_IM_APPSECRET="ALIBABA_IM_APPSECRET";
 	
 }

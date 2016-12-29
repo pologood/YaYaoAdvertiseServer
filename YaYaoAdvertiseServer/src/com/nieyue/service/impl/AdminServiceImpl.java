@@ -19,7 +19,10 @@ public class AdminServiceImpl implements AdminService{
 	public boolean addAdmin(Admin admin) {
 		admin.setCreateDate(new Date());
 		admin.setLastLoginDate(new Date());
-		admin.setStatus("审核中");
+		admin.setMoney("0");
+		if(admin.getStatus()==null||admin.getStatus().equals("")){
+			admin.setStatus("审核中");
+		}
 		boolean b = adminDao.addAdmin(admin);
 		return b;
 	}
@@ -86,6 +89,25 @@ public class AdminServiceImpl implements AdminService{
 	public List<Admin> browseAllAdmin(String orderName, String orderWay) {
 			List<Admin> l = adminDao.browseAllAdmin(orderName, orderWay);
 			return l;
+	}
+
+	@Override
+	public int countAllByRoleId(Integer roleId) {
+		int c = adminDao.countAllByRoleId(roleId);
+		return c;
+	}
+
+	@Override
+	public List<Admin> browsePagingAdminByRoleId(Integer roleId, int pageNum,
+			int pageSize, String orderName, String orderWay) {
+		if(pageNum<1){
+			pageNum=1;
+		}
+		if(pageSize<1){
+			pageSize=0;//没有数据
+		}
+		List<Admin> l = adminDao.browsePagingAdminByRoleId(roleId, pageNum-1, pageSize, orderName, orderWay);
+		return l;
 	}
 
 	

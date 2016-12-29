@@ -42,44 +42,45 @@ public class AdminControllerSessionInterceptor implements HandlerInterceptor {
 //        	//验证token成功
 //            return true;
 //        }
-        if(method.getName().equals("loginAdmin")||method.getName().equals("isloginAdmin")||method.getName().equals("tokenAdmin")){
+        if(method.getName().equals("loginAdmin")
+        ||method.getName().equals("isloginAdmin")
+        ||method.getName().equals("tokenAdmin")
+        ||method.getName().equals("validCode")
+        ||method.getName().equals("registerAdmin")
+        ||method.getName().equals("browsePagingRole")){
         	return true;
         }else if (request.getSession().getAttribute("admin")!=null) {
         	//确定角色存在
         	if(request.getSession().getAttribute("role")!=null ){
         	//超级管理员
-        	if(((Role)request.getSession().getAttribute("role")).getName().equals("超级管理员")){
+        	if(((Role)request.getSession().getAttribute("role")).getName().equals("超级管理员")
+        			||((Role)request.getSession().getAttribute("role")).getName().equals("财务")
+        			||((Role)request.getSession().getAttribute("role")).getName().equals("渠道管理员")
+        			||((Role)request.getSession().getAttribute("role")).getName().equals("广告管理员")
+        			){
         		return true;
         	}
-        	if(((Role)request.getSession().getAttribute("role")).getName().equals("主管")){
-        		
-        		return true;
-        	}
-        	if(((Role)request.getSession().getAttribute("role")).getName().equals("普通员工")){
-        		//允许任何人修改任务
-        		if(request.getRequestURI().indexOf("/task/update")>-1){
-        			return true;
-        		}
-        		//只许修改自己的值
-        		if(request.getRequestURI().indexOf("/admin")>-1){
-        			//不许删除/增加
-        			if( request.getRequestURI().indexOf("/delete")>-1 || request.getRequestURI().indexOf("/add")>-1){
-        				throw new MySellerSessionException();
-        			}
-        			return true;
-        		}
-        		//不许更新和删除
-        		if(request.getRequestURI().indexOf("/update")>-1 || request.getRequestURI().indexOf("/delete")>-1){
+        	//渠道主和广告主，admin中只许修改自己的值
+        	if(request.getRequestURI().indexOf("/admin")>-1){
+        		//不许删除/增加
+        		if( request.getRequestURI().indexOf("/delete")>-1 || request.getRequestURI().indexOf("/add")>-1){
         			throw new MySellerSessionException();
         		}
+        		return true;
+        	}
+        	if(((Role)request.getSession().getAttribute("role")).getName().equals("渠道主")){
+       
+        		
+        		return true;
+        	}
+        	if(((Role)request.getSession().getAttribute("role")).getName().equals("广告主")){
+        		
         		
         		return true;
         	}
         	
         	}
         	
-        	//验证token成功
-        	return true;
         }
         //如果验证token失败
        throw new MySellerSessionException();

@@ -1,7 +1,11 @@
 package com.nieyue.controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +24,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nieyue.bean.Admin;
 import com.nieyue.bean.Role;
 import com.nieyue.exception.StateResult;
+import com.nieyue.mail.SendMailDemo;
 import com.nieyue.service.AdminService;
 import com.nieyue.service.JurisdictionService;
 import com.nieyue.service.RoleService;
 import com.nieyue.token.TokenManager;
 import com.nieyue.token.TokenModel;
+import com.nieyue.util.DateUtil;
 import com.nieyue.util.MyDESutil;
+import com.nieyue.util.MyValidator;
+import com.nieyue.util.NumberUtil;
+import com.nieyue.util.StatusCode;
+import com.nieyue.util.ThirdParty;
+import com.yayao.messageinterface.SMSInterface;
 
 
 /**
@@ -62,6 +73,23 @@ public class AdminController {
 			return list;
 	}
 	/**
+	 * 根据角色管理员分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/role", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<Admin> browsePagingAdminByRoleId(
+			@RequestParam(value="roleId",defaultValue="1000",required=false)int roleId,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="admin_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<Admin> list = new ArrayList<Admin>();
+		list= adminService.browsePagingAdminByRoleId(roleId, pageNum, pageSize, orderName, orderWay);
+		return list;
+	}
+	/**
 	 * 管理员全部查询
 	 * @param orderName 商品排序数据库字段
 	 * @param orderWay 商品排序方法 asc升序 desc降序
@@ -84,6 +112,8 @@ public class AdminController {
 		//不能添加相同的手机号或者邮箱
 		List<String> lp = adminService.browseAllAdminPhone();
 		List<String> le = adminService.browseAllAdminEmail();
+		lp.removeAll(Collections.singleton(null));
+		le.removeAll(Collections.singleton(null));
 		Admin oa = adminService.loadAdmin(admin.getAdminId());//自身原来的
 		if(!oa.getCellPhone().equals(admin.getCellPhone())){
 		for (int i = 0; i < lp.size(); i++) {
@@ -112,6 +142,8 @@ public class AdminController {
 		//不能添加相同的手机号或者邮箱
 		List<String> lp = adminService.browseAllAdminPhone();
 		List<String> le = adminService.browseAllAdminEmail();
+		lp.removeAll(Collections.singleton(null));
+		le.removeAll(Collections.singleton(null));
 		Admin oa = adminService.loadAdmin(admin.getAdminId());//自身原来的
 		//如果修改的不等于原来的，才验证
 		if(!oa.getCellPhone().equals(admin.getCellPhone())){
@@ -150,18 +182,85 @@ public class AdminController {
 			um = adminService.updateAdmin(admin);
 		return StateResult.getSR(um);
 	}
+	
+	/**
+	 * 邮箱/手机验证码发送
+	 * 
+	 * @param adminName
+	 * @param session
+	 * @return
+	 * @throws ParseException 
+	 */
+	@RequestMapping(value = "/validCode", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody
+	StateResult validCode(@RequestParam("adminName") final String adminName,HttpSession session)  {
+		String uvc="";
+		String uvce="";
+		if(Pattern.matches(MyValidator.REGEX_EMAIL,adminName)){
+			uvc="emailValidCode";
+			uvce="emailValidCodeExpire";
+		}
+		if(Pattern.matches(MyValidator.REGEX_PHONE,adminName)){
+			uvc="phoneValidCode";
+			uvce="phoneValidCodeExpire";
+		}
+		
+		if(session.getAttribute(uvce)!=null){
+			String sessionvce = session.getAttribute(uvce).toString();
+			try {
+				if(!(new Date().after(DateUtil.getFirstToSecondsTime(DateUtil.parseDate(sessionvce), 1)))){//没超过一分钟
+					return StateResult.getSlefSR(StatusCode.GetValueByKey(StatusCode.SUCCESS), StatusCode.GetValueByKey(StatusCode.ONE_ASK_ONE));
+}
+			} catch (ParseException e) {
+				return StateResult.getFail();
+			}
+			
+		}		
+		Integer userValidCode=(int) (Math.random()*9000)+1000;
+		try {
+			if(Pattern.matches(MyValidator.REGEX_EMAIL,adminName)){
+				SendMailDemo.sendSafeMail(adminName,Integer.valueOf(userValidCode));
+			}
+			if(Pattern.matches(MyValidator.REGEX_PHONE,adminName)){
+				SMSInterface.SmsNumSend(String.valueOf(userValidCode), adminName,StatusCode.GetValueByKey(ThirdParty.ALIBABA_SMS_SIGN_NAME),StatusCode.GetValueByKey(ThirdParty.ALIBABA_SMS_TEMPLATE_CODE_ID));
+			}
+		} catch (NumberFormatException e) {
+			return null;
+		} catch (InterruptedException e) {
+			return null;
+		}
+		session.setAttribute("adminName",adminName);
+		session.setAttribute(uvc,userValidCode);
+		session.setAttribute(uvce,DateUtil.getCurrentTime());
+		return StateResult.getSuccess();
+	}
+	
+	
 	/**
 	 * 注册
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody  StateResult registerAdmin(
-			@RequestParam(value="adminName")String adminName,@RequestParam(value="password")String password,
+			@RequestParam(value="adminName")String adminName,
+			@RequestParam(value="password")String password,
+			@RequestParam("validCode") String validCode,
 			@RequestParam(value="roleId")Integer roleId,HttpSession session)  {
 		       
+			if(!session.getAttribute("adminName").equals(adminName)){
+				return StateResult.getFail();
+			}
+			if(!NumberUtil.isNumeric(validCode)){
+				return StateResult.getFail();
+			}
+			if(session.getAttribute("phoneValidCodeExpire")==null && session.getAttribute("emailValidCodeExpire")==null){
+				return StateResult.getSlefSR(40004, StatusCode.GetValueByKey("VERIFICATION_CODE_EXPIRED"));//验证码过期
+			}
 		       //不能添加相同的手机号或者邮箱
 				List<String> lp = adminService.browseAllAdminPhone();
 				List<String> le = adminService.browseAllAdminEmail();
+				lp.removeAll(Collections.singleton(null));
+				le.removeAll(Collections.singleton(null));
 				for (int i = 0; i < lp.size(); i++) {
 					if(lp.get(i).equals(adminName)){
 						return StateResult.getSlefSR(40002, "手机已经存在");
@@ -172,15 +271,46 @@ public class AdminController {
 						return StateResult.getSlefSR(40002, "email已经存在");
 					}
 				}
-				
 				Admin admin =new Admin();
-				admin.setPassword( MyDESutil.getMD5(password));
+				String uvc="";
+				String uvce="";
+				if(Pattern.matches(MyValidator.REGEX_EMAIL,adminName)){
+					uvc="emailValidCode";
+					uvce="emailValidCodeExpire";
+					admin.setEmail(adminName);
+				}
+				if(Pattern.matches(MyValidator.REGEX_PHONE,adminName)){
+					uvc="phoneValidCode";
+					uvce="phoneValidCodeExpire";
+					admin.setCellPhone(adminName);
+				}
 				
-				boolean am = adminService.addAdmin(admin);
-				session.setAttribute("admin", admin);
-				Role role = roleService.loadRole(roleId);
-				session.setAttribute("role", role);
-				return StateResult.getSR(am);
+				String sessionvce = session.getAttribute(uvce).toString();
+				try {
+					if(!(new Date().after(DateUtil.getFirstToSecondsTime(DateUtil.parseDate(sessionvce), 10)))){//10分钟没过期
+						if(Integer.valueOf(session.getAttribute(uvc).toString()).equals(Integer.valueOf(validCode))){
+						String shalp = MyDESutil.getMD5(password);
+						admin.setPassword(shalp);
+						admin.setRoleId(roleId);
+						boolean am = adminService.addAdmin(admin);
+					
+					if(am){
+						//成功则清除validcode
+						session.removeAttribute(uvc);
+						session.removeAttribute(uvce);
+						session.removeAttribute("adminName");
+						//session.setAttribute("admin", admin);
+						//Role role = roleService.loadRole(roleId);
+						//session.setAttribute("role", role);
+						return StateResult.getSuccess();
+					}
+						}
+						return StateResult.getSlefSR(40004, StatusCode.GetValueByKey("VERIFICATION_CODE_ERROR"));//验证码错误
+					}
+				} catch (NumberFormatException | ParseException e) {
+					return StateResult.getFail();
+				}
+				return StateResult.getSlefSR(40005, StatusCode.GetValueByKey("VERIFICATION_CODE_EXPIRED"));//验证码过期
 	}
 	/**
 	 * 管理员增加
@@ -191,6 +321,8 @@ public class AdminController {
 		//不能添加相同的手机号或者邮箱
 		List<String> lp = adminService.browseAllAdminPhone();
 		List<String> le = adminService.browseAllAdminEmail();
+		lp.removeAll(Collections.singleton(null));
+		le.removeAll(Collections.singleton(null));
 		for (int i = 0; i < lp.size(); i++) {
 			if(lp.get(i).equals(admin.getCellPhone())){
 				return StateResult.getSlefSR(40002, "手机号已经存在");
@@ -224,6 +356,15 @@ public class AdminController {
 		return count;
 	}
 	/**
+	 * 根据角色管理员浏览数量
+	 * @return
+	 */
+	@RequestMapping(value = "/count/{roleId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody int countAll(@PathVariable("roleId") Integer roleId,HttpSession session)  {
+		int count = adminService.countAllByRoleId(roleId);
+		return count;
+	}
+	/**
 	 * 管理员单个加载
 	 * @return
 	 */
@@ -239,10 +380,16 @@ public class AdminController {
 	 */
 	
 	@RequestMapping(value = "/login", method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody Admin loginAdmin(@RequestParam(value="adminName")String adminName,@RequestParam(value="password")String password,HttpServletRequest request,HttpServletResponse response)  {
+	public @ResponseBody Object loginAdmin(@RequestParam(value="adminName")String adminName,@RequestParam(value="password")String password,HttpServletRequest request,HttpServletResponse response)  {
 		Admin admin =new Admin();
 		String md5pwd = MyDESutil.getMD5(password);
 		admin= adminService.loginAdmin(adminName, md5pwd);
+		if(admin.getStatus().equals("审核中")){
+			return StateResult.getSlefSR(40010, "账户审核中");
+		}
+		if(admin.getStatus().equals("锁定")){
+			return StateResult.getSlefSR(40011, "账户已锁定");
+		}
 		if(admin!=null){
 			 //生成一个token，保存用户登录状态
 	        // tokenManager.createToken("XuDeOAadmin",admin.getAdminId(),request,response);

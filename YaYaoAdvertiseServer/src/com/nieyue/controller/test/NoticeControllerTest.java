@@ -73,7 +73,7 @@ public class NoticeControllerTest {
 	}
 	@Test
 	public void testCount() throws Exception {
-		String url="/mer/count?merStatus=2";
+		String url="/admin/count/1000";
 		this.mvc.perform(get(url))
 		//.andExpect(status().isOk())
 		.andDo(print());
