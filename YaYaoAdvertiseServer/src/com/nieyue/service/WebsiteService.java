@@ -20,6 +20,10 @@ public interface WebsiteService {
 	public Website loadWebsite(Integer websiteId);	
 	/** 网站总共数目 */	
 	public int countAll();
+	/** 根据管理员网站信息总共数目 */	
+	public int countAllByAdminId(Integer adminId);
 	/** 分页网站信息 */
 	public List<Website> browsePagingWebsite(int pageNum,int pageSize,String orderName,String orderWay) ;
+	/** 根据管理员分页网站信息 */
+	public List<Website> browsePagingWebsiteByAdminId(Integer adminId,int pageNum,int pageSize,String orderName,String orderWay) ;		
 }

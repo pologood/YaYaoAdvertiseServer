@@ -76,12 +76,37 @@ WHERE website_id=#{websiteId}
 	LIMIT
 		#{pageNum},#{pageSize}
 </select> 
+<!-- 根据adminId分页查询网站-->
+<select id="browsePagingWebsiteByAdminId" resultType="Website">  
+    SELECT
+	     website_id,
+	 	 name,
+   		 type,
+   		 url,
+   		 status,
+   		 remark,
+   		 update_date,
+   		 admin_id
+	FROM website_tb
+	WHERE admin_id=#{adminId}
+	ORDER BY
+		${orderName}  ${orderWay}
+	LIMIT
+		#{pageNum},#{pageSize}
+</select> 
 
 <!-- 统计记录条数 -->
 <select id="countAll"  resultType="int">  
 	SELECT
 	 	count(website_id)
 	FROM website_tb
+</select>   
+<!-- 根据管理员统计记录条数 -->
+<select id="countAllByAdminId"  resultType="int">  
+	SELECT
+	 	count(website_id)
+	FROM website_tb
+	WHERE admin_id=#{adminId}
 </select>   
    
  

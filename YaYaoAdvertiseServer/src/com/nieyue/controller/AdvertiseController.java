@@ -49,11 +49,36 @@ public class AdvertiseController {
 			return list;
 	}
 	/**
+	 * 根据adminId广告分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/admin", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<Advertise> browsePagingAdvertiseByAdminId(
+			@RequestParam(value="adminId")Integer adminId,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="advertise_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<Advertise> list = new ArrayList<Advertise>();
+		list= advertiseService.browsePagingAdvertiseByAdminId(adminId, pageNum, pageSize, orderName, orderWay);
+		return list;
+	}
+	/**
 	 * 广告修改
 	 * @return
 	 */
 	@RequestMapping(value = "/update", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdvertise(@ModelAttribute Advertise advertise,HttpSession session)  {
+		if(advertise.getStatus().equals("已结束")){
+			return StateResult.getFail();
+		}
+		
+		if(advertise.getNowUnitDeliveryNumber()>=advertise.getUnitDeliveryNumber()){
+			advertise.setStatus("已结束");
+			return StateResult.getSuccess();
+		}
 		boolean um = advertiseService.updateAdvertise(advertise);
 		return StateResult.getSR(um);
 	}
@@ -85,6 +110,15 @@ public class AdvertiseController {
 	@RequestMapping(value = "/count", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody int countAll(HttpSession session)  {
 		int count =advertiseService.countAll();
+		return count;
+	}
+	/**
+	 * 根据adminId广告浏览数量
+	 * @return
+	 */
+	@RequestMapping(value = "/count/{adminId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody int countAllByAdminId(@PathVariable("adminId") Integer adminId,HttpSession session)  {
+		int count =advertiseService.countAllByAdminId(adminId);
 		return count;
 	}
 	/**

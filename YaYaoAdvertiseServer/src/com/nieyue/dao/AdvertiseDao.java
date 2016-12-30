@@ -22,6 +22,10 @@ public interface AdvertiseDao {
 	public Advertise loadAdvertise(Integer advertiseId);	
 	/** 广告总共数目 */	
 	public int countAll();	
+	/** 根据管理员广告总共数目 */	
+	public int countAllByAdminId(Integer adminId);	
 	/** 分页广告 */
 	public List<Advertise> browsePagingAdvertise(@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+	/** 根据管理员分页广告 */
+	public List<Advertise> browsePagingAdvertiseByAdminId(@Param("adminId")Integer adminId,@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
 }

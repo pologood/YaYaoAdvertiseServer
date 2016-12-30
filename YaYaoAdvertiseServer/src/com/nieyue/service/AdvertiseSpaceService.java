@@ -20,6 +20,11 @@ public interface AdvertiseSpaceService {
 	public AdvertiseSpace loadAdvertiseSpace(Integer advertiseSpaceId);	
 	/** 广告位总共数目 */	
 	public int countAll();
+	/** 根据管理员广告位总共数目 */	
+	public int countAllByAdminId(Integer adminId);
 	/** 分页广告位信息 */
 	public List<AdvertiseSpace> browsePagingAdvertiseSpace(int pageNum,int pageSize,String orderName,String orderWay) ;
+	/** 根据管理员分页广告位信息 */
+	public List<AdvertiseSpace> browsePagingAdvertiseSpaceByAdminId(Integer adminId,int pageNum,int pageSize,String orderName,String orderWay) ;		
+
 }

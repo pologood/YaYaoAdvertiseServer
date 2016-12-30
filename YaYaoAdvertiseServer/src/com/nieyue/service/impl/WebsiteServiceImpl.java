@@ -60,5 +60,24 @@ public class WebsiteServiceImpl implements WebsiteService{
 		return l;
 	}
 
+	@Override
+	public int countAllByAdminId(Integer adminId) {
+		int c = websiteDao.countAllByAdminId(adminId);
+		return c;
+	}
+
+	@Override
+	public List<Website> browsePagingWebsiteByAdminId(Integer adminId,
+			int pageNum, int pageSize, String orderName, String orderWay) {
+		if(pageNum<1){
+			pageNum=1;
+		}
+		if(pageSize<1){
+			pageSize=0;//没有数据
+		}
+		List<Website> l = websiteDao.browsePagingWebsiteByAdminId(adminId,pageNum-1, pageSize, orderName, orderWay);
+		return l;
+	}
+
 	
 }

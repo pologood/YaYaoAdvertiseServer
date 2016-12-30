@@ -20,6 +20,10 @@ public interface AdvertiseService {
 	public Advertise loadAdvertise(Integer advertiseId);	
 	/** 广告总共数目 */	
 	public int countAll();
+	/** 根据管理员广告总共数目 */	
+	public int countAllByAdminId(Integer adminId);	
 	/** 分页广告 */
 	public List<Advertise> browsePagingAdvertise(int pageNum,int pageSize,String orderName,String orderWay) ;
+	/** 根据管理员分页广告 */
+	public List<Advertise> browsePagingAdvertiseByAdminId(Integer adminId,int pageNum,int pageSize,String orderName,String orderWay) ;		
 }

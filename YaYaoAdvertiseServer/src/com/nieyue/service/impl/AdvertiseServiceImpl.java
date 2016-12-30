@@ -60,4 +60,23 @@ public class AdvertiseServiceImpl implements AdvertiseService{
 		return l;
 	}
 
+	@Override
+	public int countAllByAdminId(Integer adminId) {
+		int p = advertiseDao.countAllByAdminId(adminId);
+		return p;
+	}
+
+	@Override
+	public List<Advertise> browsePagingAdvertiseByAdminId(Integer adminId,
+			int pageNum, int pageSize, String orderName, String orderWay) {
+		if(pageNum<1){
+			pageNum=1;
+		}
+		if(pageSize<1){
+			pageSize=0;//没有数据
+		}
+		List<Advertise> l = advertiseDao.browsePagingAdvertiseByAdminId(adminId, pageNum-1, pageSize, orderName, orderWay);
+		return l;
+	}
+
 }

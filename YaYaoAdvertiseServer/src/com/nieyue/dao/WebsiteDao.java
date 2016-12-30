@@ -21,7 +21,12 @@ public interface WebsiteDao {
 	/** 装载网站 */	
 	public Website loadWebsite(Integer websiteId);	
 	/** 网站总共数目 */	
-	public int countAll();	
+	public int countAll();
+	/** 根据管理员网站信息总共数目 */	
+	public int countAllByAdminId(Integer adminId);
 	/** 分页网站信息 */
 	public List<Website> browsePagingWebsite(@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+	/** 根据管理员分页网站信息 */
+	public List<Website> browsePagingWebsiteByAdminId(@Param("adminId")Integer adminId,@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+
 }

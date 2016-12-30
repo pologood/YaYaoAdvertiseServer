@@ -15,7 +15,9 @@
    		 link,
    		 unit_price,
    		 unit_delivery_number,
+   		 now_unit_delivery_number,
    		 unit_money,
+   		 now_unit_money,
    		 status,
    		 start_delivery_date,
    		 end_delivery_date,
@@ -30,7 +32,9 @@
     	 #{link},
     	 #{unitPrice},
     	 #{unitDeliveryNumber},
+    	 #{nowUnitDeliveryNumber},
     	 #{unitMoney},
+    	 #{nowUnitMoney},
     	 #{status},
     	 #{startDeliveryDate},
     	 #{endDeliveryDate},
@@ -50,7 +54,9 @@
     	link=#{link},
     	unit_price=#{unitPrice},
     	unit_delivery_number=#{unitDeliveryNumber},
+    	now_unit_delivery_number=#{nowUnitDeliveryNumber},
     	unit_money=#{unitMoney},
+    	now_unit_money=#{nowUnitMoney},
     	status=#{status},
     	start_delivery_date=#{startDeliveryDate},
     	end_delivery_date=#{endDeliveryDate},
@@ -76,7 +82,9 @@ SELECT
    		 link,
    		 unit_price,
    		 unit_delivery_number,
+   		 now_unit_delivery_number,
    		 unit_money,
+   		 now_unit_money,
    		 status,
    		 start_delivery_date,
    		 end_delivery_date,
@@ -97,7 +105,9 @@ WHERE advertise_id=#{advertiseId}
    		 link,
    		 unit_price,
    		 unit_delivery_number,
+   		 now_unit_delivery_number,
    		 unit_money,
+   		 now_unit_money,
    		 status,
    		 start_delivery_date,
    		 end_delivery_date,
@@ -109,12 +119,45 @@ WHERE advertise_id=#{advertiseId}
 	LIMIT
 		#{pageNum},#{pageSize}
 </select> 
+<!-- 根据adminId分页查询广告-->
+<select id="browsePagingAdvertiseByAdminId" resultType="Advertise">  
+    SELECT
+	     advertise_id,
+	 	 name,
+   		 type,
+   		 subtype,
+   		 img,
+   		 link,
+   		 unit_price,
+   		 unit_delivery_number,
+   		 now_unit_delivery_number,
+   		 unit_money,
+   		 now_unit_money,
+   		 status,
+   		 start_delivery_date,
+   		 end_delivery_date,
+   		 update_date,
+   		 admin_id
+	FROM advertise_tb
+	WHERE admin_id=#{adminId}
+	ORDER BY
+		${orderName}  ${orderWay}
+	LIMIT
+		#{pageNum},#{pageSize}
+</select> 
 
 <!-- 统计记录条数 -->
 <select id="countAll"  resultType="int">  
 	SELECT
 	 	count(advertise_id)
 	FROM advertise_tb
+</select>   
+<!-- 根据adminId统计记录条数 -->
+<select id="countAllByAdminId"  resultType="int">  
+	SELECT
+	 	count(advertise_id)
+	FROM advertise_tb
+	WHERE admin_id=#{adminId}
 </select>   
    
  

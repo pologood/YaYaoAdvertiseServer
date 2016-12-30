@@ -47,13 +47,21 @@ public class Advertise implements Serializable{
 	 */
 	private Integer unitDeliveryNumber;
 	/**
+	 * 消耗的每天投放次数
+	 */
+	private Integer nowUnitDeliveryNumber;
+	/**
 	 * 每日广告金额
 	 */
 	private Double unitMoney;
 	/**
+	 * 消耗的每日广告金额
+	 */
+	private Double nowUnitMoney;
+	/**
 	 * 广告状态
 	 */
-	private Integer status;
+	private String status;
 	/**
 	 * 投放开始时间
 	 */
@@ -80,7 +88,8 @@ public class Advertise implements Serializable{
 
 	public Advertise(Integer advertiseId, String name, String type,
 			String subtype, String img, String link, Double unitPrice,
-			Integer unitDeliveryNumber, Double unitMoney, Integer status,
+			Integer unitDeliveryNumber, Integer nowUnitDeliveryNumber,
+			Double unitMoney, Double nowUnitMoney, String status,
 			Date startDeliveryDate, Date endDeliveryDate, Date updateDate,
 			Integer adminId) {
 		super();
@@ -92,13 +101,18 @@ public class Advertise implements Serializable{
 		this.link = link;
 		this.unitPrice = unitPrice;
 		this.unitDeliveryNumber = unitDeliveryNumber;
+		this.nowUnitDeliveryNumber = nowUnitDeliveryNumber;
 		this.unitMoney = unitMoney;
+		this.nowUnitMoney = nowUnitMoney;
 		this.status = status;
 		this.startDeliveryDate = startDeliveryDate;
 		this.endDeliveryDate = endDeliveryDate;
 		this.updateDate = updateDate;
 		this.adminId = adminId;
 	}
+
+
+
 
 
 	public Integer getAdvertiseId() {
@@ -191,12 +205,12 @@ public class Advertise implements Serializable{
 	}
 
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
 
-	public void setStatus(Integer status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -238,6 +252,26 @@ public class Advertise implements Serializable{
 
 	public void setAdminId(Integer adminId) {
 		this.adminId = adminId;
+	}
+
+
+	public Integer getNowUnitDeliveryNumber() {
+		return nowUnitDeliveryNumber;
+	}
+
+
+	public void setNowUnitDeliveryNumber(Integer nowUnitDeliveryNumber) {
+		this.nowUnitDeliveryNumber = nowUnitDeliveryNumber;
+	}
+
+
+	public Double getNowUnitMoney() {
+		return nowUnitMoney;
+	}
+
+
+	public void setNowUnitMoney(Double nowUnitMoney) {
+		this.nowUnitMoney = nowUnitMoney;
 	}
 
 

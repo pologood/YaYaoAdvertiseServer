@@ -21,7 +21,11 @@ public interface AdvertiseSpaceDao {
 	/** 装载广告位 */	
 	public AdvertiseSpace loadAdvertiseSpace(Integer advertiseSpaceId);	
 	/** 广告位总共数目 */	
-	public int countAll();	
+	public int countAll();
+	/** 根据管理员广告位总共数目 */	
+	public int countAllByAdminId(Integer adminId);
 	/** 分页广告位信息 */
 	public List<AdvertiseSpace> browsePagingAdvertiseSpace(@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+	/** 根据管理员分页广告位信息 */
+	public List<AdvertiseSpace> browsePagingAdvertiseSpaceByAdminId(@Param("adminId")Integer adminId,@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
 }
