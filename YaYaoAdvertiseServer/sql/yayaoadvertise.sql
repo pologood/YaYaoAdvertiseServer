@@ -86,6 +86,20 @@ CONSTRAINT FK_ADMIN_ADVERTISE FOREIGN KEY (admin_id) REFERENCES admin_tb (admin_
 INDEX idx_admin_id (admin_id) USING BTREE
 )ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='广告表';
 
+#创建广告数据表 
+CREATE TABLE advertise_data_tb(
+advertise_data_id int(11) NOT NULL AUTO_INCREMENT COMMENT '广告数据id',
+pvs int(11) COMMENT 'pvs',
+uvs int(11) COMMENT 'uvs',
+ips int(11) COMMENT 'ips',
+forward int(11) COMMENT '转发数',
+daily_day datetime COMMENT '每日日期',
+advertise_id int(11) COMMENT '广告id',
+PRIMARY KEY (advertise_data_id),
+CONSTRAINT FK_ADVERTISE_ADVERTISE_DATA FOREIGN KEY (advertise_id) REFERENCES advertise_tb (advertise_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+INDEX idx_advertise_id (advertise_id) USING BTREE
+)ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='广告数据表';
+
 #创建广告位表 
 CREATE TABLE advertise_space_tb(
 advertise_space_id int(11) NOT NULL AUTO_INCREMENT COMMENT '广告位id',
@@ -100,6 +114,20 @@ PRIMARY KEY (advertise_space_id),
 CONSTRAINT FK_ADMIN_ADVERTISE_SPACE FOREIGN KEY (admin_id) REFERENCES admin_tb (admin_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
 INDEX idx_admin_id (admin_id) USING BTREE
 )ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='广告位表';
+
+#创建广告位数据表 
+CREATE TABLE advertise_space_data_tb(
+advertise_space_data_id int(11) NOT NULL AUTO_INCREMENT COMMENT '广告位数据id',
+pvs int(11) COMMENT 'pvs',
+uvs int(11) COMMENT 'uvs',
+ips int(11) COMMENT 'ips',
+forward int(11) COMMENT '转发数',
+daily_day datetime COMMENT '每日日期',
+advertise_space_id int(11) COMMENT '广告位id',
+PRIMARY KEY (advertise_space_data_id),
+CONSTRAINT FK_ADVERTISE_SPACE_ADVERTISE_SPACE_DATA FOREIGN KEY (advertise_space_id) REFERENCES advertise_space_tb (advertise_space_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+INDEX idx_advertise_space_id (advertise_space_id) USING BTREE
+)ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='广告位数据表';
 
 #创建广告位广告关系表
 CREATE TABLE advertise_relate_tb(

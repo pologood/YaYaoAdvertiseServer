@@ -194,6 +194,22 @@ public class AdminController {
 	@RequestMapping(value = "/validCode", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody
 	StateResult validCode(@RequestParam("adminName") final String adminName,HttpSession session)  {
+		//不能添加相同的手机号或者邮箱
+				List<String> lp = adminService.browseAllAdminPhone();
+				List<String> le = adminService.browseAllAdminEmail();
+				lp.removeAll(Collections.singleton(null));
+				le.removeAll(Collections.singleton(null));
+					for (int i = 0; i < lp.size(); i++) {
+						if(lp.get(i).equals(adminName)){
+							return StateResult.getSlefSR(40002, "手机号已经存在");
+						}
+					}
+				for (int i = 0; i < le.size(); i++) {
+					if(le.get(i).equals(adminName)){
+						return StateResult.getSlefSR(40002, "email已经存在");
+					}
+				}
+		
 		String uvc="";
 		String uvce="";
 		if(Pattern.matches(MyValidator.REGEX_EMAIL,adminName)){
@@ -384,9 +400,9 @@ public class AdminController {
 		Admin admin =new Admin();
 		String md5pwd = MyDESutil.getMD5(password);
 		admin= adminService.loginAdmin(adminName, md5pwd);
-		if(admin.getStatus().equals("审核中")){
-			return StateResult.getSlefSR(40010, "账户审核中");
-		}
+//		if(admin.getStatus().equals("审核中")){
+//			return StateResult.getSlefSR(40010, "账户审核中");
+//		}
 		if(admin.getStatus().equals("锁定")){
 			return StateResult.getSlefSR(40011, "账户已锁定");
 		}
