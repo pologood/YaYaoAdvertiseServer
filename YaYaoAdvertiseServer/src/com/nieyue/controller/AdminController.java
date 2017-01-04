@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nieyue.bean.Admin;
 import com.nieyue.bean.Role;
+import com.nieyue.bean.WaterInformation;
 import com.nieyue.exception.StateResult;
 import com.nieyue.mail.SendMailDemo;
 import com.nieyue.service.AdminService;
 import com.nieyue.service.JurisdictionService;
 import com.nieyue.service.RoleService;
+import com.nieyue.service.WaterInformationService;
 import com.nieyue.token.TokenManager;
 import com.nieyue.token.TokenModel;
 import com.nieyue.util.DateUtil;
@@ -55,6 +57,8 @@ public class AdminController {
 	private RoleService roleService;
 	@Autowired
 	private JurisdictionService jurisdictionService;
+	@Autowired
+	private WaterInformationService waterInformationService;
 	
 	/**
 	 * 管理员分页浏览
@@ -109,6 +113,10 @@ public class AdminController {
 	 */
 	@RequestMapping(value = "/update/all", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdminAll(@ModelAttribute Admin admin,HttpSession session)  {
+		//不能修改金钱
+		if(!adminService.loadAdmin(admin.getAdminId()).getMoney().equals(admin.getMoney())){
+			return StateResult.getSR(false);
+		}
 		//不能添加相同的手机号或者邮箱
 		List<String> lp = adminService.browseAllAdminPhone();
 		List<String> le = adminService.browseAllAdminEmail();
@@ -139,6 +147,10 @@ public class AdminController {
 	 */
 	@RequestMapping(value = "/update", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdmin(@ModelAttribute Admin admin,HttpSession session)  {
+		//不能修改金钱
+		if(!adminService.loadAdmin(admin.getAdminId()).getMoney().equals(admin.getMoney())){
+			return StateResult.getSR(false);
+		}
 		//不能添加相同的手机号或者邮箱
 		List<String> lp = adminService.browseAllAdminPhone();
 		List<String> le = adminService.browseAllAdminEmail();
@@ -161,6 +173,44 @@ public class AdminController {
 		}
 		}
 		boolean um = adminService.updateAdmin(admin);
+		return StateResult.getSR(um);
+	}
+	/**
+	 * 广告主金钱增加（收广告主钱）
+	 * @return
+	 */
+	@RequestMapping(value = "/money/advertise", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody StateResult moneyAdvertiseAdmin(
+			@ModelAttribute WaterInformation waterInformation,
+			HttpSession session)  {
+		Admin b = adminService.loadAdmin(waterInformation.getAdminId());
+		b.setRecharge(b.getRecharge()+waterInformation.getMoney());//充值存储
+		double nowMoney = b.getMoney()+waterInformation.getMoney();//金钱相加
+		b.setMoney(nowMoney);
+		//boolean um = adminService.moneyAdmin(waterInformation.getAdminId(),nowMoney);
+		boolean um = adminService.updateAdmin(b);
+		if(um){
+			waterInformationService.addWaterInformation(waterInformation);
+		}
+		return StateResult.getSR(um);
+	}
+	/**
+	 * 渠道主金钱减少（打款给渠道主）
+	 * @return
+	 */
+	@RequestMapping(value = "/money/advertiseSpace", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody StateResult moneyAdvertiseSpaceAdmin(
+			@ModelAttribute WaterInformation waterInformation,
+			HttpSession session)  {
+		Admin b = adminService.loadAdmin(waterInformation.getAdminId());
+		b.setWithdrawals(b.getWithdrawals()+waterInformation.getMoney());//提现存储
+		double nowMoney = b.getMoney()-waterInformation.getMoney();//金钱相减
+		b.setMoney(nowMoney);
+		//boolean um = adminService.moneyAdmin(waterInformation.getAdminId(),nowMoney);
+		boolean um = adminService.updateAdmin(b);
+		if(um){
+			waterInformationService.addWaterInformation(waterInformation);
+		}
 		return StateResult.getSR(um);
 	}
 	/**

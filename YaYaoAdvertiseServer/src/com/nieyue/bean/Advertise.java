@@ -43,19 +43,19 @@ public class Advertise implements Serializable{
 	 */
 	private Double unitPrice;
 	/**
-	 * 每天投放次数
+	 * 投放次数
 	 */
 	private Integer unitDeliveryNumber;
 	/**
-	 * 消耗的每天投放次数
+	 * 消耗的投放次数
 	 */
 	private Integer nowUnitDeliveryNumber;
 	/**
-	 * 每日广告金额
+	 * 广告金额
 	 */
 	private Double unitMoney;
 	/**
-	 * 消耗的每日广告金额
+	 * 消耗的广告金额
 	 */
 	private Double nowUnitMoney;
 	/**

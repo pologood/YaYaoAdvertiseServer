@@ -36,6 +36,18 @@ public class AdvertiseSpace implements Serializable {
 	 */
 	private String location;
 	/**
+	 * 单价
+	 */
+	private Double unitPrice;
+	/**
+	 * 获得的点击次数
+	 */
+	private Integer nowUnitDeliveryNumber;
+	/**
+	 * 获得的广告金额
+	 */
+	private Double nowUnitMoney;
+	/**
 	 * 广告位状态
 	 */
 	private String status;
@@ -52,8 +64,10 @@ public class AdvertiseSpace implements Serializable {
 		super();
 	}
 
+
 	public AdvertiseSpace(Integer advertiseSpaceId, String name,
-			String platform, String type, String location, String status,
+			String platform, String type, String location, Double unitPrice,
+			Integer nowUnitDeliveryNumber, Double nowUnitMoney, String status,
 			Date updateDate, Integer adminId) {
 		super();
 		this.advertiseSpaceId = advertiseSpaceId;
@@ -61,10 +75,14 @@ public class AdvertiseSpace implements Serializable {
 		this.platform = platform;
 		this.type = type;
 		this.location = location;
+		this.unitPrice = unitPrice;
+		this.nowUnitDeliveryNumber = nowUnitDeliveryNumber;
+		this.nowUnitMoney = nowUnitMoney;
 		this.status = status;
 		this.updateDate = updateDate;
 		this.adminId = adminId;
 	}
+
 
 	public Integer getAdvertiseSpaceId() {
 		return advertiseSpaceId;
@@ -128,6 +146,30 @@ public class AdvertiseSpace implements Serializable {
 
 	public void setAdminId(Integer adminId) {
 		this.adminId = adminId;
+	}
+
+	public Double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public Integer getNowUnitDeliveryNumber() {
+		return nowUnitDeliveryNumber;
+	}
+
+	public void setNowUnitDeliveryNumber(Integer nowUnitDeliveryNumber) {
+		this.nowUnitDeliveryNumber = nowUnitDeliveryNumber;
+	}
+
+	public Double getNowUnitMoney() {
+		return nowUnitMoney;
+	}
+
+	public void setNowUnitMoney(Double nowUnitMoney) {
+		this.nowUnitMoney = nowUnitMoney;
 	}
 
 }

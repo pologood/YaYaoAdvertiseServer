@@ -19,7 +19,9 @@ public class AdminServiceImpl implements AdminService{
 	public boolean addAdmin(Admin admin) {
 		admin.setCreateDate(new Date());
 		admin.setLastLoginDate(new Date());
-		admin.setMoney("0");
+		admin.setMoney(0.00);
+		admin.setWithdrawals(0.00);
+		admin.setRecharge(0.00);
 		if(admin.getStatus()==null||admin.getStatus().equals("")){
 			admin.setStatus("审核中");
 		}
@@ -108,6 +110,12 @@ public class AdminServiceImpl implements AdminService{
 		}
 		List<Admin> l = adminDao.browsePagingAdminByRoleId(roleId, pageNum-1, pageSize, orderName, orderWay);
 		return l;
+	}
+
+	@Override
+	public boolean moneyAdmin(Integer adminId,Double money) {
+		boolean b = adminDao.moneyAdmin(adminId,money);
+		return b;
 	}
 
 	

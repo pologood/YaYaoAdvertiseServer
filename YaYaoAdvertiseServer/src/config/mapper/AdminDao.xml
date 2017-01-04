@@ -12,6 +12,8 @@
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,
@@ -29,6 +31,8 @@
     	 #{email},
     	 #{password},
     	 #{money},
+    	 #{withdrawals},
+    	 #{recharge},
     	 #{identityCards},
     	 #{qq},
     	 #{wechat},
@@ -51,6 +55,8 @@
     	email=#{email},
     	password=#{password},
     	money=#{money},
+    	withdrawals=#{withdrawals},
+    	recharge=#{recharge},
     	identity_cards=#{identityCards},
     	qq=#{qq},
     	wechat=#{wechat},
@@ -80,6 +86,8 @@ SELECT
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,
@@ -103,6 +111,8 @@ SELECT
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,
@@ -120,6 +130,15 @@ WHERE
 AND password=#{password}
 </select>
 
+<!--修改金钱-->
+<update id="moneyAdmin" parameterType="Admin" >  
+    UPDATE 
+    	admin_tb 
+    SET 
+    	money=#{money}
+    WHERE
+    	 admin_id=#{adminId} 
+</update> 
 <!--所有登录手机号-->
 <select id="browseAllAdminPhone" resultType="String">  
     SELECT
@@ -141,6 +160,8 @@ AND password=#{password}
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,
@@ -167,6 +188,8 @@ AND password=#{password}
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,
@@ -194,6 +217,8 @@ AND password=#{password}
    		 email,
    		 password,
    		 money,
+   		 withdrawals,
+   		 recharge,
    		 identity_cards,
    		 qq,
    		 wechat,

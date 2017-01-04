@@ -20,6 +20,8 @@ public interface AdminService {
 	public Admin loadAdmin(Integer adminId);	
 	/** 登录管理员 */	
 	public Admin loginAdmin(String adminName,String password);
+	/** 修改金钱 */	
+	public boolean moneyAdmin(Integer adminId,Double money);
 	/** 管理员 总共数目 */	
 	public int countAll();	
 	/** 根据角色选择管理员 总共数目 */	

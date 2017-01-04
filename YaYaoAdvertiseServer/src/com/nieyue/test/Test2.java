@@ -1,5 +1,7 @@
 package com.nieyue.test;
 
+import java.util.Calendar;
+
 public class Test2 {
 public static void main(String[] args) {
 	String a="";
@@ -9,5 +11,6 @@ public static void main(String[] args) {
 	System.out.println(a.equals(null));
 	System.out.println(aa+bb);
 	System.out.println(Integer.MAX_VALUE);
+	System.out.println(Calendar.getInstance().getTime());
 }
 }

@@ -37,7 +37,15 @@ public class Admin implements Serializable{
 	/**
 	 * 金钱
 	 */
-	private String money;
+	private Double money;
+	/**
+	 * 提现金钱
+	 */
+	private Double withdrawals;
+	/**
+	 * 充值金钱
+	 */
+	private Double recharge;
 	/**
 	 * 身份证
 	 */
@@ -89,8 +97,8 @@ public class Admin implements Serializable{
 	}
 
 	public Admin(Integer adminId, String name, String cellPhone, String email,
-			String password, String money, String identityCards, String qq,
-			String wechat, String bankUserName, String bankName,
+			String password, Double money,Double withdrawals,Double recharge, String identityCards,
+			String qq,String wechat, String bankUserName, String bankName,
 			String bankAccount, String bankAddress, String status,
 			Date createDate, Date lastLoginDate, Integer roleId) {
 		super();
@@ -100,6 +108,8 @@ public class Admin implements Serializable{
 		this.email = email;
 		this.password = password;
 		this.money = money;
+		this.withdrawals = withdrawals;
+		this.recharge = recharge;
 		this.identityCards = identityCards;
 		this.qq = qq;
 		this.wechat = wechat;
@@ -153,11 +163,11 @@ public class Admin implements Serializable{
 		this.password = password;
 	}
 
-	public String getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(String money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
 
@@ -247,6 +257,22 @@ public class Admin implements Serializable{
 
 	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
+	}
+
+	public Double getWithdrawals() {
+		return withdrawals;
+	}
+
+	public void setWithdrawals(Double withdrawals) {
+		this.withdrawals = withdrawals;
+	}
+
+	public Double getRecharge() {
+		return recharge;
+	}
+
+	public void setRecharge(Double recharge) {
+		this.recharge = recharge;
 	}
 
 }

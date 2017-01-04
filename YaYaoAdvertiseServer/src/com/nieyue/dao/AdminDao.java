@@ -22,6 +22,8 @@ public interface AdminDao {
 	public Admin loadAdmin(Integer adminId);
 	/** 登录管理员 */	
 	public Admin loginAdmin(@Param("adminName")String adminName,@Param("password")String password);
+	/** 修改金钱 */	
+	public boolean moneyAdmin(@Param("adminId")Integer adminId,@Param("money")Double money);
 	/** 管理员 总共数目 */	
 	public int countAll();
 	/** 根据角色选择管理员 总共数目 */	

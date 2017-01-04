@@ -1,6 +1,7 @@
 package com.nieyue.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nieyue.bean.Admin;
 import com.nieyue.bean.AdvertiseSpace;
+import com.nieyue.bean.WaterInformation;
 import com.nieyue.exception.StateResult;
 import com.nieyue.service.AdvertiseSpaceService;
 
 
 /**
- * 问题控制类
+ * 广告位控制类
  * @author yy
  *
  */
@@ -31,7 +34,7 @@ public class AdvertiseSpaceController {
 	private AdvertiseSpaceService advertiseSpaceService;
 	
 	/**
-	 * 问题分页浏览
+	 * 广告位分页浏览
 	 * @param orderName 商品排序数据库字段
 	 * @param orderWay 商品排序方法 asc升序 desc降序
 	 * @return
@@ -47,16 +50,34 @@ public class AdvertiseSpaceController {
 			return list;
 	}
 	/**
-	 * 问题修改
+	 * 广告位修改
 	 * @return
 	 */
 	@RequestMapping(value = "/update", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdvertiseSpace(@ModelAttribute AdvertiseSpace advertiseSpace,HttpSession session)  {
+		//消耗完或者时间到
+//		if(advertiseSpace.get){
+//				advertise.setStatus("全部结束");
+//				Admin b = adminService.loadAdmin(advertise.getAdminId());
+//				double nowMoney = b.getMoney()-advertise.getNowUnitMoney();//金钱合并
+//				boolean um = adminService.moneyAdmin(advertise.getAdminId(),nowMoney);
+//				if(um){
+//					WaterInformation waterInformation=new WaterInformation();
+//					waterInformation.setAdminId(advertise.getAdminId());
+//					waterInformation.setName(advertise.getName());
+//					waterInformation.setType("广告");
+//					waterInformation.setMoney(advertise.getNowUnitMoney());
+//					//保存流水信息
+//					waterInformationService.addWaterInformation(waterInformation);
+//				}
+//				return StateResult.getSuccess();
+//			}
+//		
 		boolean um = advertiseSpaceService.updateAdvertiseSpace(advertiseSpace);
 		return StateResult.getSR(um);
 	}
 	/**
-	 * 问题增加
+	 * 广告位增加
 	 * @return 
 	 */
 	@RequestMapping(value = "/add", method = {RequestMethod.GET,RequestMethod.POST})
@@ -65,7 +86,7 @@ public class AdvertiseSpaceController {
 		return StateResult.getSR(am);
 	}
 	/**
-	 * 问题删除
+	 * 广告位删除
 	 * @return
 	 */
 	@RequestMapping(value = "/{advertiseSpaceId}/delete", method = {RequestMethod.GET,RequestMethod.POST})
@@ -74,7 +95,7 @@ public class AdvertiseSpaceController {
 		return StateResult.getSR(dm);
 	}
 	/**
-	 * 问题浏览数量
+	 * 广告位浏览数量
 	 * @return
 	 */
 	@RequestMapping(value = "/count", method = {RequestMethod.GET,RequestMethod.POST})
@@ -83,7 +104,7 @@ public class AdvertiseSpaceController {
 		return count;
 	}
 	/**
-	 * 问题单个加载
+	 * 广告位单个加载
 	 * @return
 	 */
 	@RequestMapping(value = "/{advertiseSpaceId}", method = {RequestMethod.GET,RequestMethod.POST})

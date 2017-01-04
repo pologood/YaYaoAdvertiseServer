@@ -3,6 +3,7 @@ package com.nieyue.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nieyue.bean.Admin;
 import com.nieyue.bean.Advertise;
+import com.nieyue.bean.WaterInformation;
 import com.nieyue.exception.StateResult;
+import com.nieyue.service.AdminService;
 import com.nieyue.service.AdvertiseService;
+import com.nieyue.service.WaterInformationService;
 
 
 /**
@@ -31,6 +36,10 @@ import com.nieyue.service.AdvertiseService;
 public class AdvertiseController {
 	@Resource
 	private AdvertiseService advertiseService;
+	@Resource
+	private AdminService adminService;
+	@Resource
+	private WaterInformationService waterInformationService;
 	
 	/**
 	 * 广告分页浏览
@@ -74,11 +83,25 @@ public class AdvertiseController {
 		if(advertise.getStatus().equals("已结束")){
 			return StateResult.getFail();
 		}
-		
-		if(advertise.getNowUnitDeliveryNumber()>=advertise.getUnitDeliveryNumber()){
+		//消耗完或者时间到
+		if(advertise.getNowUnitDeliveryNumber()>=advertise.getUnitDeliveryNumber()
+				||advertise.getEndDeliveryDate().before(new Date())){
 			advertise.setStatus("已结束");
+			Admin b = adminService.loadAdmin(advertise.getAdminId());
+			double nowMoney = b.getMoney()-advertise.getNowUnitMoney();//金钱合并
+			boolean um = adminService.moneyAdmin(advertise.getAdminId(),nowMoney);
+			if(um){
+				WaterInformation waterInformation=new WaterInformation();
+				waterInformation.setAdminId(advertise.getAdminId());
+				waterInformation.setName(advertise.getName());
+				waterInformation.setType("消耗");
+				waterInformation.setMoney(advertise.getNowUnitMoney());
+				//保存流水信息
+				waterInformationService.addWaterInformation(waterInformation);
+			}
 			return StateResult.getSuccess();
 		}
+		
 		boolean um = advertiseService.updateAdvertise(advertise);
 		return StateResult.getSR(um);
 	}
@@ -91,6 +114,10 @@ public class AdvertiseController {
 	 */
 	@RequestMapping(value = "/add", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult addAdvertise(@ModelAttribute Advertise advertise, HttpSession session) {
+			if(advertise.getEndDeliveryDate().before(new Date())){
+					return StateResult.getFail();
+				}
+		
 		boolean am = advertiseService.addAdvertise(advertise);
 		return StateResult.getSR(am);
 	}

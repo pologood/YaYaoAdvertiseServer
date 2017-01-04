@@ -21,7 +21,9 @@ name varchar(255) COMMENT '管理员姓名',
 cell_phone varchar(255) COMMENT '手机号',
 email varchar(255) COMMENT '邮箱',
 password varchar(255) COMMENT '密码',
-money varchar(255) COMMENT '金钱',
+money decimal(11,2) COMMENT '金钱',
+recharge decimal(11,2) COMMENT '充值金钱',
+withdrawals decimal(11,2) COMMENT '已提现金钱',
 identity_cards varchar(255) COMMENT '身份证',
 qq varchar(255) COMMENT 'QQ',
 wechat varchar(255) COMMENT '微信号',
@@ -37,6 +39,19 @@ PRIMARY KEY (admin_id),
 CONSTRAINT FK_ROLE_ADMIN FOREIGN KEY (role_id) REFERENCES role_tb (role_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
 INDEX idx_role_id (role_id) USING BTREE
 )ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='管理员表';
+
+#创建流水信息表 
+CREATE TABLE water_information_tb(
+water_information_id int(11) NOT NULL AUTO_INCREMENT COMMENT '流水信息id',
+name varchar(255) COMMENT '名称',
+type varchar(255) COMMENT '类型',
+money decimal(11,2) COMMENT '金钱',
+create_date datetime COMMENT '创建时间',
+admin_id int(11) COMMENT '管理员id外键',
+PRIMARY KEY (water_information_id),
+CONSTRAINT FK_ADMIN_WATER_INFORMATION FOREIGN KEY (admin_id) REFERENCES admin_tb (admin_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+INDEX idx_admin_id (admin_id) USING BTREE
+)ENGINE = InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='流水信息表';
 
 #创建权限表 
 CREATE TABLE jurisdiction_tb(
@@ -74,7 +89,7 @@ link varchar(255) COMMENT '链接地址',
 unit_price decimal(11,2) COMMENT '单价',
 unit_delivery_number int(11) COMMENT '投放次数',
 now_unit_delivery_number int(11) COMMENT '消耗的投放次数',
-unit_money decimal(11,2) COMMENT '每日广告金额',
+unit_money decimal(11,2) COMMENT '广告金额',
 now_unit_money decimal(11,2) COMMENT '消耗的广告金额',
 status varchar(255) COMMENT '广告状态',
 start_delivery_date datetime COMMENT '投放开始时间',
@@ -107,6 +122,9 @@ name varchar(255) COMMENT '名称',
 platform varchar(255) COMMENT '投放平台',
 type varchar(255) COMMENT '类型',
 location varchar(255) COMMENT '广告位置',
+unit_price decimal(11,2) COMMENT '单价',
+now_unit_delivery_number int(11) COMMENT '获取的点击次数',
+now_unit_money decimal(11,2) COMMENT '获取的广告位金额',
 status varchar(255) COMMENT '广告位状态',
 update_date datetime COMMENT '更新时间',
 admin_id int(11) COMMENT '管理员id外键',
