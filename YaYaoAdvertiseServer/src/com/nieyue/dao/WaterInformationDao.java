@@ -22,6 +22,11 @@ public interface WaterInformationDao {
 	public WaterInformation loadWaterInformation(Integer waterInformationId);	
 	/** 流水信息总共数目 */	
 	public int countAll();	
+	/** 根据管理员流水信息总共数目 */	
+	public int countAllByAdminId(Integer adminId);	
+	/** 根据管理员分页流水信息 */
+	public List<WaterInformation> browsePagingWaterInformationByAdminId(@Param("adminId")Integer adminId,@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
 	/** 分页流水信息信息 */
 	public List<WaterInformation> browsePagingWaterInformation(@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+
 }

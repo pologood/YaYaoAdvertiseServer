@@ -47,6 +47,23 @@ public class WebsiteController {
 			return list;
 	}
 	/**
+	 * 根据adminId网站分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/admin", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<Website> browsePagingWebsiteByAdminId(
+			@RequestParam(value="adminId")Integer adminId,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="website_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<Website> list = new ArrayList<Website>();
+		list= websiteService.browsePagingWebsiteByAdminId(adminId,pageNum, pageSize, orderName, orderWay);
+		return list;
+	}
+	/**
 	 * 网站修改
 	 * @return
 	 */
@@ -80,6 +97,15 @@ public class WebsiteController {
 	@RequestMapping(value = "/count", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody int countAll(HttpSession session)  {
 		int count = websiteService.countAll();
+		return count;
+	}
+	/**
+	 * 根据adminId网站浏览数量
+	 * @return
+	 */
+	@RequestMapping(value = "/count/{adminId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody int countAllByAdminId(@PathVariable("adminId")Integer adminId,HttpSession session)  {
+		int count = websiteService.countAllByAdminId(adminId);
 		return count;
 	}
 	/**

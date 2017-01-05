@@ -1,5 +1,6 @@
 package com.nieyue.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nieyue.bean.Admin;
 import com.nieyue.bean.Advertise;
@@ -24,6 +26,9 @@ import com.nieyue.exception.StateResult;
 import com.nieyue.service.AdminService;
 import com.nieyue.service.AdvertiseService;
 import com.nieyue.service.WaterInformationService;
+import com.nieyue.util.DateUtil;
+import com.nieyue.util.FileUploadUtil;
+import com.nieyue.util.UploaderPath;
 
 
 /**
@@ -80,6 +85,9 @@ public class AdvertiseController {
 	 */
 	@RequestMapping(value = "/update", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdvertise(@ModelAttribute Advertise advertise,HttpSession session)  {
+		if(advertise.getUnitPrice()<0.3){
+			return StateResult.getFail();
+		}
 		if(advertise.getStatus().equals("已结束")){
 			return StateResult.getFail();
 		}
@@ -114,7 +122,10 @@ public class AdvertiseController {
 	 */
 	@RequestMapping(value = "/add", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult addAdvertise(@ModelAttribute Advertise advertise, HttpSession session) {
-			if(advertise.getEndDeliveryDate().before(new Date())){
+			if(advertise.getUnitPrice()<0.3){
+				return StateResult.getFail();
+			}
+		if(advertise.getEndDeliveryDate().before(new Date())){
 					return StateResult.getFail();
 				}
 		
@@ -157,5 +168,42 @@ public class AdvertiseController {
 		Advertise advertise=new Advertise();
 		advertise = advertiseService.loadAdvertise(advertiseId);
 		return advertise;
+	}
+	/**
+	 * 图片修改
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/img/update", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody String updateAdvertiseImg(
+			HttpSession session,
+			@RequestParam("img") MultipartFile file,
+			@RequestParam("oldImg")String oldImg) throws IOException  {
+		String imgUrl = null;
+		String imgdir=DateUtil.getImgDir();
+		try{
+			imgUrl = FileUploadUtil.updateFormDataMerImgFileUpload(file, session,UploaderPath.GetValueByKey(UploaderPath.ROOTPATH),UploaderPath.GetValueByKey(UploaderPath.IMG), imgdir, oldImg);
+		}catch (IOException e) {
+			throw new IOException();
+		}
+		return imgUrl;
+	}
+	/**
+	 * 图片增加
+	 * @return
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "/img/add", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody String addAdvertiseImg(
+			@RequestParam("img") MultipartFile file,
+			HttpSession session ) throws IOException  {
+		String imgUrl = null;
+		String imgdir=DateUtil.getImgDir();
+		try{
+			imgUrl = FileUploadUtil.FormDataMerImgFileUpload(file, session,UploaderPath.GetValueByKey(UploaderPath.ROOTPATH),UploaderPath.GetValueByKey(UploaderPath.IMG),imgdir);
+		}catch (IOException e) {
+			throw new IOException();
+		}
+		return imgUrl;
 	}
 }

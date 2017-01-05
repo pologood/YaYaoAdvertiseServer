@@ -35,6 +35,17 @@ public class DateUtil {
 		nowTime= df.format(dt);//用DateFormat的format()方法在dt中获取并以yyyy/MM/dd HH:mm:ss格式显示
 		return nowTime;
 	}
+	/**
+	 * 格式化时间"yyyyMMdd
+	 * @return
+	 */
+	public static String getImgDir(){
+		Date dt=new Date();//如果不需要格式,可直接用dt,dt就是当前系统时间
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");//设置显示格式
+		String nowTime="";
+		nowTime= df.format(dt);//用DateFormat的format()方法在dt中获取并以yyyy/MM/dd HH:mm:ss格式显示
+		return nowTime;
+	}
 	
 	/** 
      * 时间戳转换成日期格式字符串 
@@ -171,5 +182,6 @@ public class DateUtil {
         System.out.println(getSeparatedTime());
         System.out.println(getFirstToDay(new Date(), 1).toLocaleString());
         System.out.println(getFirstToSecondsTime(new Date(), 1).toLocaleString());
+        System.out.println(getImgDir());
     }  
 }
