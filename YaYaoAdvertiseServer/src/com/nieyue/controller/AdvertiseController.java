@@ -96,8 +96,9 @@ public class AdvertiseController {
 				||advertise.getEndDeliveryDate().before(new Date())){
 			advertise.setStatus("已结束");
 			Admin b = adminService.loadAdmin(advertise.getAdminId());
-			double nowMoney = b.getMoney()-advertise.getNowUnitMoney();//金钱合并
-			boolean um = adminService.moneyAdmin(advertise.getAdminId(),nowMoney);
+			double nowMoney = b.getMoney()-advertise.getNowUnitMoney();//消耗金钱
+			b.setMoney(nowMoney);
+			boolean um = adminService.updateAdmin(b);
 			if(um){
 				WaterInformation waterInformation=new WaterInformation();
 				waterInformation.setAdminId(advertise.getAdminId());
@@ -105,9 +106,11 @@ public class AdvertiseController {
 				waterInformation.setType("消耗");
 				waterInformation.setMoney(advertise.getNowUnitMoney());
 				//保存流水信息
+				if(advertise.getNowUnitMoney()>0.00){					
 				waterInformationService.addWaterInformation(waterInformation);
+				}
 			}
-			return StateResult.getSuccess();
+			//return StateResult.getSuccess();
 		}
 		
 		boolean um = advertiseService.updateAdvertise(advertise);

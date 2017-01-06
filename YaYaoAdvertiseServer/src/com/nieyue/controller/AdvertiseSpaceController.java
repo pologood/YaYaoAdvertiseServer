@@ -1,7 +1,6 @@
 package com.nieyue.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nieyue.bean.Admin;
 import com.nieyue.bean.AdvertiseSpace;
-import com.nieyue.bean.WaterInformation;
 import com.nieyue.exception.StateResult;
 import com.nieyue.service.AdvertiseSpaceService;
 
@@ -48,6 +45,23 @@ public class AdvertiseSpaceController {
 			List<AdvertiseSpace> list = new ArrayList<AdvertiseSpace>();
 			list= advertiseSpaceService.browsePagingAdvertiseSpace(pageNum, pageSize, orderName, orderWay);
 			return list;
+	}
+	/**
+	 * 根据adminId广告位分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/admin", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<AdvertiseSpace> browsePagingAdvertiseSpaceByAdminId(
+			@RequestParam(value="adminId")Integer adminId,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="advertise_space_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<AdvertiseSpace> list = new ArrayList<AdvertiseSpace>();
+		list= advertiseSpaceService.browsePagingAdvertiseSpaceByAdminId(adminId,pageNum, pageSize, orderName, orderWay);
+		return list;
 	}
 	/**
 	 * 广告位修改
@@ -101,6 +115,15 @@ public class AdvertiseSpaceController {
 	@RequestMapping(value = "/count", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody int countAll(HttpSession session)  {
 		int count = advertiseSpaceService.countAll();
+		return count;
+	}
+	/**
+	 * 根据adminId广告位浏览数量
+	 * @return
+	 */
+	@RequestMapping(value = "/count/{adminId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody int countAllByAdminId(@PathVariable("adminId")Integer adminId,HttpSession session)  {
+		int count = advertiseSpaceService.countAllByAdminId(adminId);
 		return count;
 	}
 	/**
