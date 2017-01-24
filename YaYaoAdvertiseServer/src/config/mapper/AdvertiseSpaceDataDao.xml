@@ -29,7 +29,6 @@
     UPDATE 
     	advertise_space_data_tb 
     SET 
-    pvs,
    		 pvs=#{pvs},
    		 uvs=#{uvs},
    		 ips=#{ips},
@@ -37,7 +36,7 @@
    		 daily_day=#{dailyDay},
    		 advertise_space_id=#{advertiseSpaceId}
     WHERE
-    	 advertise_space_data_id=#{advertise_space_data_id} 
+    	 advertise_space_data_id=#{advertiseSpaceDataId} 
 </update> 
 <!-- 删除广告数据-->
 <delete id="delAdvertiseSpaceData"  parameterType="Integer" >  
@@ -59,6 +58,21 @@ FROM advertise_space_data_tb
 WHERE advertise_space_data_id=#{advertiseSpaceDataId}
 </select>
 
+<!-- 根据广告位Id和时间装载广告数据-->
+<select id="loadAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDay"  resultType="AdvertiseSpaceData" >
+SELECT 
+		 advertise_space_data_id,
+	 	 pvs,
+   		 uvs,
+   		 ips,
+   		 forward,
+   		 daily_day,
+   		 advertise_space_id
+FROM advertise_space_data_tb 
+WHERE advertise_space_id=#{advertiseSpaceId}
+AND DATE(daily_day)=DATE(#{dailyDay})
+</select>
+
 <!-- 分页查询广告数据-->
 <select id="browsePagingAdvertiseSpaceData" resultType="AdvertiseSpaceData">  
     SELECT
@@ -75,7 +89,23 @@ WHERE advertise_space_data_id=#{advertiseSpaceDataId}
 	LIMIT
 		#{pageNum},#{pageSize}
 </select> 
-
+<!-- 根据广告位Id和时间段分页查询广告数据-->
+<select id="browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays" resultType="AdvertiseSpaceData">  
+    SELECT
+	     advertise_space_data_id,
+	 	 pvs,
+   		 uvs,
+   		 ips,
+   		 forward,
+   		 daily_day,
+   		 advertise_space_id
+	FROM advertise_space_data_tb
+	WHERE advertise_space_id=#{advertiseSpaceId}
+	AND daily_day 
+	BETWEEN #{startDailyDay} AND #{endDailyDay}
+	ORDER BY
+		${orderName}  ${orderWay}
+</select>
 <!-- 统计记录条数 -->
 <select id="countAll"  resultType="int">  
 	SELECT

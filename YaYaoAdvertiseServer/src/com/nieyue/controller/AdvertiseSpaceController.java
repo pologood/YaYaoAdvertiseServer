@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nieyue.bean.AdvertiseSpace;
 import com.nieyue.exception.StateResult;
+import com.nieyue.service.AdminService;
+import com.nieyue.service.AdvertiseSpaceDataService;
 import com.nieyue.service.AdvertiseSpaceService;
+import com.nieyue.service.WaterInformationService;
 
 
 /**
@@ -29,6 +32,12 @@ import com.nieyue.service.AdvertiseSpaceService;
 public class AdvertiseSpaceController {
 	@Resource
 	private AdvertiseSpaceService advertiseSpaceService;
+	@Resource
+	private AdminService adminService;
+	@Resource
+	private WaterInformationService waterInformationService;
+	@Resource
+	private AdvertiseSpaceDataService advertiseSpaceDataService;
 	
 	/**
 	 * 广告位分页浏览
@@ -69,24 +78,45 @@ public class AdvertiseSpaceController {
 	 */
 	@RequestMapping(value = "/update", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody StateResult updateAdvertiseSpace(@ModelAttribute AdvertiseSpace advertiseSpace,HttpSession session)  {
-		//消耗完或者时间到
-//		if(advertiseSpace.get){
-//				advertise.setStatus("全部结束");
-//				Admin b = adminService.loadAdmin(advertise.getAdminId());
-//				double nowMoney = b.getMoney()-advertise.getNowUnitMoney();//金钱合并
-//				boolean um = adminService.moneyAdmin(advertise.getAdminId(),nowMoney);
-//				if(um){
-//					WaterInformation waterInformation=new WaterInformation();
-//					waterInformation.setAdminId(advertise.getAdminId());
-//					waterInformation.setName(advertise.getName());
-//					waterInformation.setType("广告");
-//					waterInformation.setMoney(advertise.getNowUnitMoney());
-//					//保存流水信息
-//					waterInformationService.addWaterInformation(waterInformation);
+//		//盈利
+//			AdvertiseData advertiseData = advertiseDataService.loadAdvertiseDataByAdvertiseIdAndDailyDay(advertise.getAdvertiseId(), new Date());
+//			//如果没有当前的数据，增添加
+//			if(advertiseData==null||advertiseData.equals("")){
+//			AdvertiseData ad=new AdvertiseData();
+//			ad.setAdvertiseId(advertise.getAdvertiseId());
+//			ad.setPvs(1l);
+//			ad.setUvs(1l);
+//			ad.setIps(1l);
+//			ad.setForward(0l);
+//			advertiseDataService.addAdvertiseData(advertiseData);
+//			
+//		}else{
+//			//有就更新
+//			advertiseData.setPvs(1l+1);
+//			advertiseData.setUvs(1l+1);
+//			advertiseData.setIps(1l+1);
+//			advertiseData.setForward(0l);
+//			advertiseDataService.updateAdvertiseData(advertiseData);
+//		}
+//			
+//			
+//			Admin b = adminService.loadAdmin(advertiseSpace.getAdminId());
+//			double nowMoney = b.getMoney()+advertiseSpace.getNowUnitMoney();//盈利金钱
+//			b.setMoney(nowMoney);
+//			boolean um = adminService.updateAdmin(b);
+//			if(um){
+//				WaterInformation waterInformation=new WaterInformation();
+//				waterInformation.setAdminId(advertiseSpace.getAdminId());
+//				waterInformation.setName(advertiseSpace.getName());
+//				waterInformation.setType("盈利");
+//				waterInformation.setMoney(advertiseSpace.getNowUnitMoney());
+//				//保存流水信息
+//				if(advertiseSpace.getNowUnitMoney()>0.00){					
+//				waterInformationService.addWaterInformation(waterInformation);
 //				}
-//				return StateResult.getSuccess();
 //			}
-//		
+//			//return StateResult.getSuccess();
+//	
 		boolean um = advertiseSpaceService.updateAdvertiseSpace(advertiseSpace);
 		return StateResult.getSR(um);
 	}
@@ -134,6 +164,7 @@ public class AdvertiseSpaceController {
 	public @ResponseBody AdvertiseSpace loadAdvertiseSpace(@PathVariable("advertiseSpaceId") Integer advertiseSpaceId,HttpSession session)  {
 		AdvertiseSpace advertiseSpace=new AdvertiseSpace();
 		advertiseSpace = advertiseSpaceService.loadAdvertiseSpace(advertiseSpaceId);
+		
 		return advertiseSpace;
 	}
 	

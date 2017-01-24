@@ -93,6 +93,56 @@ SELECT
 FROM advertise_tb 
 WHERE advertise_id=#{advertiseId}
 </select>
+<!-- 根据金额随机一条广告-->
+<select id="browsePagingAdvertiseSpaceShowAdvertise"  resultType="Advertise" >
+
+SELECT 
+		 advertise_id,
+	 	 name,
+   		 type,
+   		 subtype,
+   		 img,
+   		 link,
+   		 unit_price,
+   		 unit_delivery_number,
+   		 now_unit_delivery_number,
+   		 unit_money,
+   		 now_unit_money,
+   		 status,
+   		 start_delivery_date,
+   		 end_delivery_date,
+   		 update_date,
+   		 admin_id
+FROM advertise_tb as a1 
+JOIN (SELECT ROUND(RAND() * ((SELECT MAX(advertise_id) FROM advertise_tb)-(SELECT MIN(advertise_id) FROM advertise_tb))+(SELECT MIN(advertise_id) FROM advertise_tb)) AS aid) AS a2
+WHERE unit_price>=#{unitPrice} 
+AND status=#{status}
+AND a1.advertise_id = a2.aid
+</select>
+<!-- 根据金额随机一条广告 备胎-->
+<select id="browsePagingAdvertiseSpaceShowAdvertiseBei"  resultType="Advertise" >
+
+SELECT 
+		 advertise_id,
+	 	 name,
+   		 type,
+   		 subtype,
+   		 img,
+   		 link,
+   		 unit_price,
+   		 unit_delivery_number,
+   		 now_unit_delivery_number,
+   		 unit_money,
+   		 now_unit_money,
+   		 status,
+   		 start_delivery_date,
+   		 end_delivery_date,
+   		 update_date,
+   		 admin_id
+FROM advertise_tb 
+WHERE unit_price>=#{unitPrice} 
+AND status=#{status}
+</select>
 
 <!-- 分页查询广告-->
 <select id="browsePagingAdvertise" resultType="Advertise">  

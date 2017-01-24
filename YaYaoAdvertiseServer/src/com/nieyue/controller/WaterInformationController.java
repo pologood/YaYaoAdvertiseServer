@@ -1,6 +1,7 @@
 package com.nieyue.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -122,6 +123,16 @@ public class WaterInformationController {
 			waterInformation = waterInformationService.loadWaterInformation(waterInformationId);
 			 session.setAttribute("waterInformation",waterInformation);
 		}
+		return waterInformation;
+	}
+	/**
+	 * 根据adminId 和创建日期流水信息单个加载
+	 * @return
+	 */
+	@RequestMapping(value = "/{adminId}/{createDate}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody WaterInformation loadWaterInformationByAdminIdAndCreateDate(@PathVariable("adminId") Integer adminId,@PathVariable("createDate") Date createDate,HttpSession session)  {
+		WaterInformation waterInformation=new WaterInformation();
+			waterInformation = waterInformationService.loadWaterInformationByAdminIdAndCreateDate(adminId, createDate);
 		return waterInformation;
 	}
 	

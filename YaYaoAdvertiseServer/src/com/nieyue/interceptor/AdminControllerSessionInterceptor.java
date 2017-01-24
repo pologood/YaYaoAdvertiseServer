@@ -47,6 +47,10 @@ public class AdminControllerSessionInterceptor implements HandlerInterceptor {
         ||method.getName().equals("tokenAdmin")
         ||method.getName().equals("validCode")
         ||method.getName().equals("registerAdmin")
+        ||method.getName().equals("loadAdvertiseSpace")
+        ||method.getName().equals("loadAdvertise")
+        ||method.getName().equals("clickAdvertise")
+        ||method.getName().equals("advertiseSpaceShowAdvertise")
         ||method.getName().equals("browsePagingRole")){
         	return true;
         }else if (request.getSession().getAttribute("admin")!=null) {

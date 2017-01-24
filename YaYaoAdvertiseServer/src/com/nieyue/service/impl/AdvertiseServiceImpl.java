@@ -17,6 +17,8 @@ public class AdvertiseServiceImpl implements AdvertiseService{
 	@Override
 	public boolean addAdvertise(Advertise advertise) {
 		advertise.setUpdateDate(new Date());
+		advertise.setNowUnitDeliveryNumber(0);
+		advertise.setNowUnitMoney(0.00);
 		boolean b = advertiseDao.addAdvertise(advertise);
 		return b;
 	}
@@ -77,6 +79,19 @@ public class AdvertiseServiceImpl implements AdvertiseService{
 		}
 		List<Advertise> l = advertiseDao.browsePagingAdvertiseByAdminId(adminId, pageNum-1, pageSize, orderName, orderWay);
 		return l;
+	}
+
+	@Override
+	public Advertise browsePagingAdvertiseSpaceShowAdvertise(Double unitPrice,String status) {
+		Advertise a = advertiseDao.browsePagingAdvertiseSpaceShowAdvertise(unitPrice,status);
+		return a;
+	}
+
+	@Override
+	public List<Advertise> browsePagingAdvertiseSpaceShowAdvertiseBei(
+			Double unitPrice, String status) {
+		List<Advertise> a = advertiseDao.browsePagingAdvertiseSpaceShowAdvertiseBei(unitPrice, status);
+		return a;
 	}
 
 }

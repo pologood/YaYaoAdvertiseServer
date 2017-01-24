@@ -8,46 +8,76 @@ var advertiseSpace=(function(){
 /**
 **对象初始化
 */
-    function advertiseSpace(config,UI){
 
-      //每日数据
-      this.DataDay={
-        data_day_id:'',//初始化每日数据id
-         pvs:0,//初始化pv数目
-         uvs:0,//初始化uv数目
-         ips:0,//初始化ip数目
-         forward:0,//初始化转发数
-         daily_day:'',//每日日期
-         advertise_space_id:window.advertise_space_id||''//初始化广告id
-      };
+    function advertiseSpace(UI){
+    	//广告UI
+    	this.UI={
+    			width:'100%',//默认移动端
+    			height:'100px',
+    			position:"relative",//默认固定
+    			left:'0',//默认0
+    			top:'0',//默认0
+    			margin:'auto',
+    			zindex:'99999999'
+    	};
+    	  //广告对象配置
+        this.advertise={
+         advertise_id:'',//广告位id
+         name:'',//名称
+         type:'',//类型
+         subtype :'',//子类型
+         img:'',//图片路径
+         link:'',//链接地址
+         unit_price:'',
+         unit_delivery_number:'',
+         now_unit_delivery_number:'',
+         unit_money:'',
+         now_unit_money:'',
+         status:'',//状态
+         start_delivery_date:'',//投放开始时间
+         end_delivery_date:'',//投放结束时间
+         update_date:timeStampToDate(new Date()),//更新时间
+         admin_id:''//广告主id
+        };
+      //广告每日数据
+    	this.advertiseData={
+    			advertise_data_id:'',//初始化每日数据id
+    			pvs:0,//初始化pv数目
+    			uvs:0,//初始化uv数目
+    			ips:0,//初始化ip数目
+    			forward:0,//初始化转发数
+    			daily_day:timeStampToDate(new Date()),//每日日期
+    			advertise_id:''//初始化广告id
+    	};
       //广告位对象配置
     	this.config={
        	advertise_space_id:window.advertise_space_id||'',//广告位id
        	name:'',//名称
         platform:'移动端',//平台
         type:'悬浮',//类型
+        location:'顶部',
+        unit_price:'',
+        now_unit_delivery_number:'',
+        now_unit_money:'',
         status:'',//状态
-        trasition:false,//转态  false为正常
-        update_time:timeStampToDate(new Date()),//更新时间
-        channel_id:''//渠道id
+        update_date:timeStampToDate(new Date()),//更新时间
+        admin_id:''//渠道主id
        };
-       //广告UI
-       this.UI={
-       	width:'100%',//默认移动端
-       	height:'100px',
-       	position:"relative",//默认固定
-       	left:'0',//默认0
-       	top:'0',//默认0
-        margin:'auto',
-       	location:'',//位置
-       	zindex:'99999999',
-       	imgUrl:'http://www.yayao8.com/resources/img/logo.jpg',
-       	link:'http://www.baidu.com'
-       };
+    	//广告位每日数据
+    	this.advertiseSpaceData={
+    			advertise_space_data_id:'',//初始化每日数据id
+    			pvs:0,//初始化pv数目
+    			uvs:0,//初始化uv数目
+    			ips:0,//初始化ip数目
+    			forward:0,//初始化转发数
+    			daily_day:timeStampToDate(new Date()),//每日日期
+    			advertise_space_id:window.advertise_space_id||''//初始化广告id
+    	};
      
-		//$.extend(this.config,config);
-		this.config=extendObj(this.config,config);
+		//$.extend(this.UI,UI);
+    if(UI){
 		this.UI=extendObj(this.UI,UI);
+    }
     }
     /**
     **对象方法定义
@@ -58,30 +88,51 @@ var advertiseSpace=(function(){
 */
         getAdvertiseSpaceConfig:function(){
           var _this=this;
-
-           //  $.get("/advertiseSpace/"+advertiseSpace_id,function(data){
-           //   if(data==''||data==null){ return;}
-    //this.UI.location='顶部';
-    _this.UI.location='底部';
-   // this.config.type="悬浮";
-    _this.config.type="内嵌";
-   // console.log(this.config.update_time)
-           // });
- myAjax({
-        url: "http://man.fuwu88.cn/news/8995",     //请求地址
-        type: "GET",                       //请求方式
-        //data: { name: "super", age: 20 },        //请求参数
-        dataType: "json",
-        success: function (response, xml) {
-            // 此处放成功后执行的代码
-            console.log(JSON.parse(response))
-           
-           // console.log(xml)
-        },
-        fail: function (status) {
-            // 此处放失败后执行的代码
-        }
-    });
+    //_this.config.location='顶部';
+    _this.config.location='底部';
+    //_this.config.type="悬浮";
+   _this.config.type="内嵌";
+   
+   //获取广告位
+  myAjax({
+         url: "/advertiseSpace/"+advertise_space_id,     //请求地址
+         type: "GET",
+         async:false,                       //请求方式
+         dataType: "json",
+         success: function (response, xml) {
+             // 此处放成功后执行的代码
+          // _this.UI.imgUrl="http://dadi.c0563.com/MMUUAA/3536/0e2f79263a938ab70b62514bf7df487a";
+            _this.config=JSON.parse(response);
+             console.log(JSON.parse(response))
+         },
+         fail: function (status) {
+             // 此处放失败后执行的代码
+         }
+     });
+  //获取广告
+  myAjax({
+	  url: "/advertise/advertiseSpaceShowAdvertise",     //请求地址
+	  type: "GET",
+	  async:false,  
+	  data:{
+		  advertiseSpaceId:_this.config.advertise_space_id
+	  },
+	  dataType: "json",
+	  success: function (response, xml) {
+		  // 此处放成功后执行的代码
+		  // _this.UI.imgUrl="http://dadi.c0563.com/MMUUAA/3536/0e2f79263a938ab70b62514bf7df487a";
+		  if(!response){
+			  _this.advertise=null;
+			  throw "暂无广告！";
+		  }
+		 // console.log(response)
+		  _this.advertise=JSON.parse(response);
+		  console.log(JSON.parse(response))
+	  },
+	  fail: function (status) {
+		  // 此处放失败后执行的代码
+	  }
+  });
      return _this.config;
         },
 /**
@@ -90,19 +141,23 @@ var advertiseSpace=(function(){
 *location  广告位置
 */
  getAdvertiseSpaceDiv:function(thisAdvertiseSpaceConfig,location){
+	 	//无广告不显示
+	 if(!this.advertise){
+	 		return;
+	 	}
             //创建div
              var thisDiv=document.createElement("div");
              thisDiv.setAttribute("style","position:"+this.UI.position+";left:"+this.UI.left+";top:"+this.UI.top+";height:"+this.UI.height+";width:"+this.UI.width+";margin:"+this.UI.margin);
              thisDiv.setAttribute('id',"ui"+thisAdvertiseSpaceConfig.advertise_space_id);
              //创建第一个a
              var firsta=document.createElement("a");
-             firsta.setAttribute("href",this.UI.link);
+             firsta.setAttribute("href",this.advertise.link);
              firsta.setAttribute("target",'view_window');
              firsta.setAttribute("style","box-sizing:border-box;display:block;position:absolute;left:0;top:0;border:1px solid #ccc;width:100%;height:100%;;");
              //创建第一个a里面的img
              var firstimg=document.createElement("img");
              firstimg.setAttribute("style","width:100%;height:100%;z-index:"+this.UI.zindex);
-             firstimg.setAttribute("src",this.UI.imgUrl);
+             firstimg.setAttribute("src",this.advertise.img);
              firsta.appendChild(firstimg);
              //把a导入div,把div导入body
              thisDiv.appendChild(firsta);
@@ -110,11 +165,11 @@ var advertiseSpace=(function(){
              //bodyNode.appendChild(thisDiv);
              //动态添加
              bodyNode[location](thisDiv,bodyNode.childNodes[0]);
-             //创建第二个a
+             //创建第二个a 
              var seconda=document.createElement("a");
              seconda.innerHTML="×";
              seconda.setAttribute("href",'javascript:;');
-             seconda.setAttribute("style","position:absolute;top:0;right:1px;z-index:10000;border:1px solid #ccc; background-color:#ccc;color:white;height:20px;width:20px;line-height:15px;text-align:center;font-size:30px;text-decoration:none;");
+             seconda.setAttribute("style","position:absolute;top:0;right:1px;z-index:10000;border:1px solid #ccc; background-color:#ccc;color:white;height:20px;width:20px;line-height:20px;text-align:center;font-size:22px;text-decoration:none;");
              thisDiv.appendChild(seconda);
              //监听第二个a的事件，删除整个div
              var _this=this;
@@ -126,33 +181,28 @@ var advertiseSpace=(function(){
              document.querySelector('#ui'+thisAdvertiseSpaceConfig.advertise_space_id+" a:first-child").addEventListener('click',function(){
              
 
-              _this.DataDay.pvs++;
-              localStorage.setItem("DataDay",JSON.stringify(_this.DataDay));
+              //_this.DataDay.pvs++;
+             // localStorage.setItem("DataDay",JSON.stringify(_this.DataDay));
               //setCookie("DataDay",_this.DataDay.pvs,5);
              // console.log(getCookie("DataDay"));
-             console.log(JSON.parse(localStorage.getItem("DataDay")).pvs)
-             if(_this.DataDay.daily_day==''){
-              _this.DataDay.daily_day=timeStampToDate(new Date());
-              _this.DataDay.ips++;
-             }else{
-              if(!new Date( _this.DataDay.daily_day).getDay()==new Date().getDay() 
-               ){
-                 _this.DataDay.daily_day=timeStampToDate(new Date());
-               _this.DataDay.ips++;
-                
-              }
-             }
+             //console.log(JSON.parse(localStorage.getItem("DataDay")).pvs)
+//             if(_this.DataDay.daily_day==''){
+//              _this.DataDay.daily_day=timeStampToDate(new Date());
+//              _this.DataDay.ips++;
+//             }else{
+//              if(!new Date( _this.DataDay.daily_day).getDay()==new Date().getDay() 
+//               ){
+//                 _this.DataDay.daily_day=timeStampToDate(new Date());
+//               _this.DataDay.ips++;
+//                
+//              }
+//             }
                myAjax({
-                  url: "/advertiseSpace/update",     //请求地址
+                  url: "/advertise/click",     //请求地址
                   type: "POST",                       //请求方式
                   data: {
-                    data_day_id:  _this.DataDay.data_day_id,
-                    pvs:  _this.DataDay.pvs,
-                    uvs: _this.DataDay.uvs,
-                    ips:_this.DataDay.ips,
-                    forward:_this.DataDay.forward,
-                    daily_day:_this.DataDay.daily_day,
-                    advertise_space_id:_this.DataDay.advertise_space_id
+                    advertiseId:_this.advertise.advertise_id,
+                    advertiseSpaceId:_this.config.advertise_space_id
                     },        //请求参数
                   dataType: "json",
                   success: function (response, xml) {
@@ -168,16 +218,6 @@ var advertiseSpace=(function(){
 
 
             },false);
-            // $("body")[location](
-            //   "<div style='position:relative;left:0;top:0;height:"+this.UI.height+";width:"+this.UI.width+"' id='ui"+this.getAdvertiseSpaceConfig().advertiseSpace_id+"' >"+
-            //   "<a href='"+this.UI.link+"' target='view_window' style='box-sizing:border-box;display:block;position:absolute;left:0;top:0;border:1px solid #ccc;width:100%;height:100%;"+
-            //   ";position:"+this.UI.position+";left:"+this.UI.left+";top:"+this.UI.top+";'>"+
-            //   "<img style='width:100%;height:100%;z-index:"+this.UI.zindex+";' src='"+this.UI.imgUrl+"'/>"+
-            //   "</a>"+
-            //   "<a style='position:absolute;top:0px;right:1px;z-index:10000;border:1px solid #9839e4; background-color:#9839e4;color:white;height:20px;width:20px;line-height:15px;text-align:center;font-size:30px;text-decoration:none;'"+
-            //   " href='javascript:document.querySelector("+'"#ui'+this.getAdvertiseSpaceConfig().advertiseSpace_id+'"'+").removeChild(document.querySelector("+'"#ui'+this.getAdvertiseSpaceConfig().advertiseSpace_id+'"'+").childNodes[0]);document.querySelector("+'"#ui'+this.getAdvertiseSpaceConfig().advertiseSpace_id+'"'+").removeChild(document.querySelector("+'"#ui'+this.getAdvertiseSpaceConfig().advertiseSpace_id+'"'+").childNodes[0]);'>×</a>"+
-            //    "</div>"
-            //   );
             },
 /**
 **根据配置获取广告层UI
@@ -186,10 +226,10 @@ var advertiseSpace=(function(){
           var thisAdvertiseSpaceConfig=this.getAdvertiseSpaceConfig();
             var location;
           if(thisAdvertiseSpaceConfig.type=='内嵌'){
-            if(this.UI.location=='顶部'){
+            if(thisAdvertiseSpaceConfig.location=='顶部'){
               location='insertBefore';
             }
-            if(this.UI.location=='底部'){
+            if(thisAdvertiseSpaceConfig.location=='底部'){
               location='appendChild';
             }
             this.getAdvertiseSpaceDiv(thisAdvertiseSpaceConfig,location);
@@ -198,10 +238,10 @@ var advertiseSpace=(function(){
         	}
           if(thisAdvertiseSpaceConfig.type=='悬浮'){
             this.UI.position='fixed';
-            if(this.UI.location=='顶部'){
+            if(thisAdvertiseSpaceConfig.location=='顶部'){
               location='insertBefore';
             }
-            if(this.UI.location=='底部'){
+            if(thisAdvertiseSpaceConfig.location=='底部'){
               location='appendChild';
               this.UI.top="100%";
               this.UI.margin="-"+this.UI.height+" 0px";
@@ -292,8 +332,8 @@ return temp;
         options = options || {};
         options.type = (options.type || "GET").toUpperCase();
         options.dataType = options.dataType || "json";
+        options.async==false?options.async:options.async=true;
         var params = formatParams(options.data);
-
         //创建 - 非IE6 - 第一步
         if (window.XMLHttpRequest) {
             var xhr = new XMLHttpRequest();
@@ -315,10 +355,10 @@ return temp;
 
         //连接 和 发送 - 第二步
         if (options.type == "GET") {
-            xhr.open("GET", options.url + "?" + params, true);
+            xhr.open("GET", options.url + "?" + params, options.async);
             xhr.send(null);
         } else if (options.type == "POST") {
-            xhr.open("POST", options.url, true);
+            xhr.open("POST", options.url, options.async);
             //设置表单提交时的内容类型
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.send(params);
@@ -335,6 +375,7 @@ return temp;
     }
 
 //对象调用
-new advertiseSpace().showAdvertiseSpaceUI();
-//window.advertiseSpace= advertiseSpace;
+var oldAdvertiseSpace=new advertiseSpace();
+oldAdvertiseSpace.showAdvertiseSpaceUI();
+  //window.advertiseSpace= advertiseSpace;
 })(window);

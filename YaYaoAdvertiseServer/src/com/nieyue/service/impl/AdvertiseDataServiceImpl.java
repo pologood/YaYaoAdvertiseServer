@@ -59,5 +59,20 @@ public class AdvertiseDataServiceImpl implements AdvertiseDataService{
 		return l;
 	}
 
+	@Override
+	public AdvertiseData loadAdvertiseDataByAdvertiseIdAndDailyDay(
+			Integer advertiseId, Date dailyDay) {
+		AdvertiseData r = advertiseDataDao.loadAdvertiseDataByAdvertiseIdAndDailyDay(advertiseId, dailyDay);
+		return r;
+	}
+
+	@Override
+	public List<AdvertiseData> browsePagingAdvertiseDataByAdvertiseIdAndDailyDays(
+			Integer advertiseId, Date startDailyDay, Date endDailyDay,
+			String orderName, String orderWay) {
+		List<AdvertiseData> l = advertiseDataDao.browsePagingAdvertiseDataByAdvertiseIdAndDailyDays(advertiseId, startDailyDay, endDailyDay, orderName, orderWay);
+		return l;
+	}
+
 	
 }

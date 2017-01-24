@@ -26,7 +26,7 @@ public class RedisTokenManagerImpl implements TokenManager {
 		 String token = UUID.randomUUID().toString().replace("-", "");
 		 TokenModel model = new TokenModel(adminId, token);
 		 //存储在redis
-		 stringRedisTemplate.boundValueOps(projectName+adminId.toString()).set(token, 1800, TimeUnit.SECONDS);;
+		 stringRedisTemplate.boundValueOps(projectName+adminId.toString()).set(token, 1800, TimeUnit.SECONDS);
 		 //存储cookie客户端
 		Cookie cookie = new Cookie(projectName+adminId.toString(), token);  
         cookie.setMaxAge(1800);// 设置为30min  

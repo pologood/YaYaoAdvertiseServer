@@ -4,6 +4,8 @@ import static org.junit.Assert.fail;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
@@ -11,18 +13,30 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.types.RedisClientInfo;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
+import com.nieyue.bean.Advertise;
 import com.nieyue.bean.Notice;
+import com.nieyue.service.AdvertiseService;
 import com.nieyue.service.NoticeService;
+import com.nieyue.util.DateUtil;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:config/spring-dao.xml","classpath:config/spring-service.xml"})
 @TransactionConfiguration(transactionManager="txManager",defaultRollback=false)
 public class NoticeServiceImplTest {
 	@Resource
 	 NoticeService  noticeService;
+	@Resource
+	AdvertiseService  advertiseService;
+	@Resource
+	private StringRedisTemplate stringRedisTemplate;
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -53,7 +67,11 @@ public class NoticeServiceImplTest {
 
 	@Test
 	public void testLoadNotice() {
-		fail("Not yet implemented");
+		//Notice n = noticeService.loadNotice(1011);
+		//System.out.println(n);
+		Advertise advertise = advertiseService.browsePagingAdvertiseSpaceShowAdvertise(0.6,"投放中");
+		System.out.println(advertise);
+		
 	}
 
 	@Test
@@ -61,11 +79,20 @@ public class NoticeServiceImplTest {
 		int n = noticeService.countAll();
 		System.out.println(n);
 	}
+	@Test
+	public void dddredis() {
+		 //stringRedisTemplate.boundValueOps("a1").set("a1v", DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+		if(stringRedisTemplate.boundValueOps("a1").get()!=null){
+			System.out.println(stringRedisTemplate.boundValueOps("a1").getKey());
+			System.out.println(stringRedisTemplate.boundValueOps("a1").getExpire());
+			System.out.println(stringRedisTemplate.boundValueOps("a1").get());
+		}
+	}
 
 
 	@Test
 	public void testBrowsePagingNotice() {
-		List<Notice> l = noticeService.browsePagingNotice(1, 1, "update_date", "desc");
+		List<Notice> l = noticeService.browsePagingNotice(1, 10, "update_date", "desc");
 		for (int i = 0; i < l.size(); i++) {
 			System.out.println(l.get(i).getType());
 			

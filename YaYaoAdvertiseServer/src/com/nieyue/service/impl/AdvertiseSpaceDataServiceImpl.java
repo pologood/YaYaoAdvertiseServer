@@ -59,5 +59,20 @@ public class AdvertiseSpaceDataServiceImpl implements AdvertiseSpaceDataService{
 		return l;
 	}
 
+	@Override
+	public AdvertiseSpaceData loadAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDay(
+			Integer advertiseSpaceId, Date dailyDay) {
+		AdvertiseSpaceData r = advertiseSpaceDataDao.loadAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDay(advertiseSpaceId, dailyDay);
+		return r;
+	}
+
+	@Override
+	public List<AdvertiseSpaceData> browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays(
+			Integer advertiseSpaceId, Date startDailyDay, Date endDailyDay,
+			String orderName, String orderWay) {
+		List<AdvertiseSpaceData> l = advertiseSpaceDataDao.browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays(advertiseSpaceId, startDailyDay, endDailyDay, orderName, orderWay);
+		return l;
+	}
+
 	
 }

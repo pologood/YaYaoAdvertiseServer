@@ -1,6 +1,7 @@
 package com.nieyue.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -45,6 +46,25 @@ public class AdvertiseDataController {
 			List<AdvertiseData> list = new ArrayList<AdvertiseData>();
 			list= advertiseDataService.browsePagingAdvertiseData(pageNum, pageSize, orderName, orderWay);
 			return list;
+	}
+	/**
+	 * 根据广告Id和时间段广告数据分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/advertise", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<AdvertiseData> browsePagingAdvertiseDataByAdvertiseIdAndDailyDays(
+			@RequestParam(value="advertiseId")Integer advertiseId,
+			@RequestParam(value="startDailyDay")Date startDailyDay,
+			@RequestParam(value="endDailyDay")Date endDailyDay,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="advertise_data_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<AdvertiseData> list = new ArrayList<AdvertiseData>();
+		list= advertiseDataService.browsePagingAdvertiseDataByAdvertiseIdAndDailyDays(advertiseId, startDailyDay, endDailyDay, orderName, orderWay);
+		return list;
 	}
 	/**
 	 * 广告数据修改
@@ -95,6 +115,16 @@ public class AdvertiseDataController {
 			advertiseData = advertiseDataService.loadAdvertiseData(advertiseDataId);
 			 session.setAttribute("advertiseData",advertiseData);
 		}
+		return advertiseData;
+	}
+	/**
+	 * 根据广告Id和时间广告数据单个加载
+	 * @return
+	 */
+	@RequestMapping(value = "/{advertiseId}/{dailyDay}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody AdvertiseData loadAdvertiseDataByAdvertiseIdAndDailyDay(@PathVariable("advertiseId") Integer advertiseId,@PathVariable("dailyDay") Date dailyDay,HttpSession session)  {
+		AdvertiseData advertiseData=new AdvertiseData();
+		advertiseData = advertiseDataService.loadAdvertiseDataByAdvertiseIdAndDailyDay(advertiseId, dailyDay);
 		return advertiseData;
 	}
 	

@@ -81,7 +81,8 @@ public class NoticeControllerTest {
 	@Test
 	public void testLoadMer() throws Exception {
 		//String url="/mer/1026";
-		String url="/admin/login?adminName=15111336587&password=123456";
+		//String url="/admin/login?adminName=15111336587&password=123456";
+		String url="/advertise/advertiseSpaceShowAdvertise?advertiseSpaceId=1009";
 		//String url="/admin/1000";
 		this.mvc.perform(get(url))
 		//.andExpect(status().isOk())

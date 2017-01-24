@@ -18,6 +18,8 @@ public class AdvertiseSpaceServiceImpl implements AdvertiseSpaceService{
 	@Override
 	public boolean addAdvertiseSpace(AdvertiseSpace advertiseSpace) {
 		advertiseSpace.setUpdateDate(new Date());
+		advertiseSpace.setNowUnitDeliveryNumber(0);
+		advertiseSpace.setNowUnitMoney(0.0);
 		boolean b = advertiseSpaceDao.addAdvertiseSpace(advertiseSpace);
 		return b;
 	}

@@ -26,6 +26,10 @@ public interface AdvertiseDao {
 	public int countAllByAdminId(Integer adminId);	
 	/** 分页广告 */
 	public List<Advertise> browsePagingAdvertise(@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
+	/** 根据金额随机一条广告 */
+	public Advertise browsePagingAdvertiseSpaceShowAdvertise(@Param("unitPrice")Double unitPrice,@Param("status")String status) ;
+	/** 根据金额随机一条广告 备胎 */
+	public List<Advertise> browsePagingAdvertiseSpaceShowAdvertiseBei(@Param("unitPrice")Double unitPrice,@Param("status")String status) ;
 	/** 根据管理员分页广告 */
 	public List<Advertise> browsePagingAdvertiseByAdminId(@Param("adminId")Integer adminId,@Param("pageNum")int pageNum,@Param("pageSize")int pageSize,@Param("orderName")String orderName,@Param("orderWay")String orderWay) ;		
 }

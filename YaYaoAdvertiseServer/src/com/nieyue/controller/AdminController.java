@@ -123,14 +123,15 @@ public class AdminController {
 		lp.removeAll(Collections.singleton(null));
 		le.removeAll(Collections.singleton(null));
 		Admin oa = adminService.loadAdmin(admin.getAdminId());//自身原来的
-		if(!oa.getCellPhone().equals(admin.getCellPhone())){
-		for (int i = 0; i < lp.size(); i++) {
-			if(lp.get(i).equals(admin.getCellPhone())){
-				return StateResult.getSlefSR(40002, "手机号已经存在");
+		//如果修改的不等于原来的，才验证
+		if(oa.getCellPhone()!=null&&!oa.getCellPhone().equals(admin.getCellPhone())){
+			for (int i = 0; i < lp.size(); i++) {
+				if(lp.get(i).equals(admin.getCellPhone())){
+					return StateResult.getSlefSR(40002, "手机号已经存在");
+				}
 			}
 		}
-		}
-		if(!oa.getEmail().equals(admin.getEmail())){
+		if(oa.getEmail()!=null&&!oa.getEmail().equals(admin.getEmail())){
 		for (int i = 0; i < le.size(); i++) {
 			if(le.get(i).equals(admin.getEmail())){
 				return StateResult.getSlefSR(40002, "email已经存在");
@@ -158,14 +159,14 @@ public class AdminController {
 		le.removeAll(Collections.singleton(null));
 		Admin oa = adminService.loadAdmin(admin.getAdminId());//自身原来的
 		//如果修改的不等于原来的，才验证
-		if(!oa.getCellPhone().equals(admin.getCellPhone())){
+		if(oa.getCellPhone()!=null&&!oa.getCellPhone().equals(admin.getCellPhone())){
 			for (int i = 0; i < lp.size(); i++) {
 				if(lp.get(i).equals(admin.getCellPhone())){
 					return StateResult.getSlefSR(40002, "手机号已经存在");
 				}
 			}
 		}
-		if(!oa.getEmail().equals(admin.getEmail())){
+		if(oa.getEmail()!=null&&!oa.getEmail().equals(admin.getEmail())){
 		for (int i = 0; i < le.size(); i++) {
 			if(le.get(i).equals(admin.getEmail())){
 				return StateResult.getSlefSR(40002, "email已经存在");

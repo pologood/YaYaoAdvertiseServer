@@ -79,5 +79,12 @@ public class WaterInformationServiceImpl implements WaterInformationService{
 		return l;
 	}
 
+	@Override
+	public WaterInformation loadWaterInformationByAdminIdAndCreateDate(
+			Integer adminId, Date createDate) {
+		WaterInformation w = waterInformationDao.loadWaterInformationByAdminIdAndCreateDate(adminId, createDate);
+		return w;
+	}
+
 	
 }

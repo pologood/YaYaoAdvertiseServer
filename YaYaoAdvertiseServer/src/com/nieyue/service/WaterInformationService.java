@@ -1,5 +1,6 @@
 package com.nieyue.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.nieyue.bean.WaterInformation;
@@ -21,7 +22,9 @@ public interface WaterInformationService {
 	/** 流水信息总共数目 */	
 	public int countAll();
 	/** 根据管理员流水信息总共数目 */	
-	public int countAllByAdminId(Integer adminId);	
+	public int countAllByAdminId(Integer adminId);
+	/** 根据管理员Id和时间装载流水信息*/	
+	public WaterInformation loadWaterInformationByAdminIdAndCreateDate(Integer adminId,Date createDate);
 	/** 根据管理员分页流水信息 */
 	public List<WaterInformation> browsePagingWaterInformationByAdminId(Integer adminId,int pageNum,int pageSize,String orderName,String orderWay) ;		
 	/** 分页流水信息信息 */

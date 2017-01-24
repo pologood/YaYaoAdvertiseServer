@@ -1,6 +1,7 @@
 package com.nieyue.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -45,6 +46,25 @@ public class AdvertiseSpaceDataController {
 			List<AdvertiseSpaceData> list = new ArrayList<AdvertiseSpaceData>();
 			list= advertiseSpaceDataService.browsePagingAdvertiseSpaceData(pageNum, pageSize, orderName, orderWay);
 			return list;
+	}
+	/**
+	 * 根据广告位Id和时间段广告数据分页浏览
+	 * @param orderName 商品排序数据库字段
+	 * @param orderWay 商品排序方法 asc升序 desc降序
+	 * @return
+	 */
+	@RequestMapping(value = "/list/advertiseSpace", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<AdvertiseSpaceData> browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays(
+			@RequestParam(value="advertiseSpaceId")Integer advertiseSpaceId,
+			@RequestParam(value="startDailyDay")Date startDailyDay,
+			@RequestParam(value="endDailyDay")Date endDailyDay,
+			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
+			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
+			@RequestParam(value="orderName",required=false,defaultValue="advertise_data_id") String orderName,
+			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
+		List<AdvertiseSpaceData> list = new ArrayList<AdvertiseSpaceData>();
+		list= advertiseSpaceDataService.browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays(advertiseSpaceId, startDailyDay, endDailyDay, orderName, orderWay);
+		return list;
 	}
 	/**
 	 * 广告位数据修改
@@ -97,5 +117,14 @@ public class AdvertiseSpaceDataController {
 		}
 		return advertiseSpaceData;
 	}
-	
+	/**
+	 * 根据广告位Id和时间广告数据单个加载
+	 * @return
+	 */
+	@RequestMapping(value = "/{advertiseSpaceId}/{dailyDay}", method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody AdvertiseSpaceData loadAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDay(@PathVariable("advertiseSpaceId") Integer advertiseSpaceId,@PathVariable("dailyDay") Date dailyDay,HttpSession session)  {
+		AdvertiseSpaceData advertiseSpaceData=new AdvertiseSpaceData();
+		advertiseSpaceData = advertiseSpaceDataService.loadAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDay(advertiseSpaceId, dailyDay);
+		return advertiseSpaceData;
+	}
 }
