@@ -3,6 +3,7 @@ package com.nieyue.service.impl.test;
 import static org.junit.Assert.fail;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.redis.core.BoundSetOperations;
+import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -81,12 +84,23 @@ public class NoticeServiceImplTest {
 	}
 	@Test
 	public void dddredis() {
-		 //stringRedisTemplate.boundValueOps("a1").set("a1v", DateUtil.currentToEndTime(), TimeUnit.SECONDS);
-		if(stringRedisTemplate.boundValueOps("a1").get()!=null){
-			System.out.println(stringRedisTemplate.boundValueOps("a1").getKey());
-			System.out.println(stringRedisTemplate.boundValueOps("a1").getExpire());
-			System.out.println(stringRedisTemplate.boundValueOps("a1").get());
+//		BoundSetOperations<String, String> bso = stringRedisTemplate.boundSetOps("c1");
+//		bso.expire(DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+//		bso.add("dsd");
+//		bso.add("dsd2");
+//		bso.add("dsd2");
+		if(stringRedisTemplate.boundSetOps("c1").getOperations()!=null){
+			System.out.println(stringRedisTemplate.boundSetOps("c1").getKey());
+			System.out.println(stringRedisTemplate.boundSetOps("c1").members());
+			System.out.println(stringRedisTemplate.boundSetOps("c1").getExpire());
+			System.out.println(stringRedisTemplate.boundSetOps("c1").getType());
 		}
+		// stringRedisTemplate.boundValueOps("a1").set("测试", DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+//		if(stringRedisTemplate.boundValueOps("a1").get()!=null){
+//			System.out.println(stringRedisTemplate.boundValueOps("a1").getKey());
+//			System.out.println(stringRedisTemplate.boundValueOps("a1").getExpire());
+//			System.out.println(stringRedisTemplate.boundValueOps("a1").get());
+//		}
 	}
 
 

@@ -12,8 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONArray;
-
+import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -137,7 +136,12 @@ public class AdvertiseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/click", method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody StateResult clickAdvertise(@RequestParam("advertiseId") Integer advertiseId,@RequestParam("advertiseSpaceId") Integer advertiseSpaceId,HttpSession session,HttpServletRequest request)  {
+	public @ResponseBody StateResult clickAdvertise(
+			@RequestParam("advertiseId") Integer advertiseId,
+			@RequestParam("advertiseSpaceId") Integer advertiseSpaceId,
+			@RequestParam("advertiseUv") Integer advertiseUv,
+			@RequestParam("advertiseSpaceUv") Integer advertiseSpaceUv,
+			HttpSession session,HttpServletRequest request)  {
 		boolean isSuccess=false;
 		Advertise daoadvertise = advertiseService.loadAdvertise(advertiseId);
 		if(daoadvertise.getStatus().equals("已结束")||daoadvertise.getStatus().equals("暂停")){
@@ -199,34 +203,44 @@ public class AdvertiseController {
 				ads.setPvs(1l);
 				ads.setUvs(1l);
 				
-				//redis没有就先存储ip地址
-				String[] advertiseSpaceDataIps={IPCountUtil.getIpAddr(request)};
-				JSONArray ja2=JSONArray.fromObject(advertiseSpaceDataIps);
-				stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).set(ja2.toString(), DateUtil.currentToEndTime(), TimeUnit.SECONDS);
 
 				ads.setIps(1l);
 				ads.setForward(0l);
 			advertiseSpaceDataService.addAdvertiseSpaceData(ads);
+			//redis没有就先存储ip地址
+			//String[] advertiseSpaceDataIps={IPCountUtil.getIpAddr(request)};
+			//JSONArray ja2=JSONArray.fromObject(advertiseSpaceDataIps);
+			//stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).set(ja2.toString(), DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+			BoundSetOperations<String, String> bso2 = stringRedisTemplate.boundSetOps("advertiseSpaceDataIps"+ads.getAdvertiseSpaceDataId());
+			bso2.expire(DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+			bso2.add(IPCountUtil.getIpAddr(request));
 			
 		}else{
 			//有就更新
 			advertiseSpaceData.setPvs(advertiseSpaceData.getPvs()+1);
+			if(advertiseSpaceUv==1){				
 			advertiseSpaceData.setUvs(advertiseSpaceData.getUvs()+1);
+			}
 			//redis有就更新
-			if(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).get()!=null){
-				JSONArray nja2=JSONArray.fromObject(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).get());
-				//判断有无相等的ip
-				boolean haveSample2=false;
-				for (int i = 0; i < nja2.size(); i++) {
-					String ip2 = (String) nja2.get(i);
-					if(ip2.equals(IPCountUtil.getIpAddr(request))){
-						haveSample2=true;//有相等的
-					}
-				}
-				if(!haveSample2){
-					nja2.add(IPCountUtil.getIpAddr(request));
-					advertiseSpaceData.setIps(advertiseSpaceData.getIps()+1);
-				}
+//			if(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).get()!=null){
+//				JSONArray nja2=JSONArray.fromObject(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId()).get());
+//				//判断有无相等的ip
+//				boolean haveSample2=false;
+//				for (int i = 0; i < nja2.size(); i++) {
+//					String ip2 = (String) nja2.get(i);
+//					if(ip2.equals(IPCountUtil.getIpAddr(request))){
+//						haveSample2=true;//有相等的
+//					}
+//				}
+//				if(!haveSample2){
+//					nja2.add(IPCountUtil.getIpAddr(request));
+//					advertiseSpaceData.setIps(advertiseSpaceData.getIps()+1);
+//				}
+//			}
+			BoundSetOperations<String, String> bso2 = stringRedisTemplate.boundSetOps("advertiseSpaceDataIps"+advertiseSpaceData.getAdvertiseSpaceDataId());
+			if(bso2.getKey()!=null&& !bso2.getKey().equals("")){
+					bso2.add(IPCountUtil.getIpAddr(request));
+					advertiseSpaceData.setIps(Long.valueOf(bso2.members().size()));
 			}
 			advertiseSpaceData.setForward(advertiseSpaceData.getForward()+0l);
 			advertiseSpaceDataService.updateAdvertiseSpaceData(advertiseSpaceData);
@@ -280,35 +294,45 @@ public class AdvertiseController {
 			ad.setAdvertiseId(daoadvertise.getAdvertiseId());
 			ad.setPvs(1l);
 			ad.setUvs(1l);
-			//redis没有就先存储ip地址
-			String[] advertiseDataIps={IPCountUtil.getIpAddr(request)};
-			JSONArray ja=JSONArray.fromObject(advertiseDataIps);
-			stringRedisTemplate.boundValueOps("advertiseDataIps"+advertiseData.getAdvertiseDataId()).set(ja.toString(), DateUtil.currentToEndTime(), TimeUnit.SECONDS);
-
+				
 			ad.setIps(1l);
 			ad.setForward(0l);
 			advertiseDataService.addAdvertiseData(ad);
+			//redis没有就先存储ip地址
+//			String[] advertiseDataIps={IPCountUtil.getIpAddr(request)};
+//			JSONArray ja=JSONArray.fromObject(advertiseDataIps);
+//			stringRedisTemplate.boundValueOps("advertiseDataIps"+advertiseData.getAdvertiseDataId()).set(ja.toString(), DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+			
+			BoundSetOperations<String, String> bso = stringRedisTemplate.boundSetOps("advertiseDataIps"+ad.getAdvertiseDataId());
+			bso.expire(DateUtil.currentToEndTime(), TimeUnit.SECONDS);
+			bso.add(IPCountUtil.getIpAddr(request));
 			
 			}else{
 				//有就更新
 				advertiseData.setPvs(advertiseData.getPvs()+1);
+				if(advertiseUv==1){
 				advertiseData.setUvs(advertiseData.getUvs()+1);
-				
+				}
 				//redis有就更新
-				if(stringRedisTemplate.boundValueOps("advertiseDataIps"+advertiseData.getAdvertiseDataId()).get()!=null){
-					JSONArray nja=JSONArray.fromObject(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseData.getAdvertiseDataId()).get());
-					//判断有无相等的ip
-					boolean haveSample=false;
-					for (int i = 0; i < nja.size(); i++) {
-						String ip = (String) nja.get(i);
-						if(ip.equals(IPCountUtil.getIpAddr(request))){
-							haveSample=true;//有相等的
-						}
-					}
-					if(!haveSample){
-						nja.add(IPCountUtil.getIpAddr(request));
-						advertiseData.setIps(advertiseData.getIps()+1);
-					}
+//				if(stringRedisTemplate.boundValueOps("advertiseDataIps"+advertiseData.getAdvertiseDataId()).get()!=null){
+//					JSONArray nja=JSONArray.fromObject(stringRedisTemplate.boundValueOps("advertiseSpaceDataIps"+advertiseData.getAdvertiseDataId()).get());
+//					//判断有无相等的ip
+//					boolean haveSample=false;
+//					for (int i = 0; i < nja.size(); i++) {
+//						String ip = (String) nja.get(i);
+//						if(ip.equals(IPCountUtil.getIpAddr(request))){
+//							haveSample=true;//有相等的
+//						}
+//					}
+//					if(!haveSample){
+//						nja.add(IPCountUtil.getIpAddr(request));
+//						advertiseData.setIps(advertiseData.getIps()+1);
+//					}
+//				}
+				BoundSetOperations<String, String> bso = stringRedisTemplate.boundSetOps("advertiseDataIps"+advertiseData.getAdvertiseDataId());
+				if(bso.getKey()!=null&& !bso.getKey().equals("")){
+						bso.add(IPCountUtil.getIpAddr(request));
+						advertiseData.setIps(Long.valueOf(bso.members().size()));
 				}
 				advertiseData.setForward(advertiseData.getForward()+0l);
 				advertiseDataService.updateAdvertiseData(advertiseData);

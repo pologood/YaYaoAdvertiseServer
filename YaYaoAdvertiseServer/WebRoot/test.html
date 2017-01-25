@@ -41,6 +41,16 @@
 	  return Y+M+D+h+m+s; 
 	  }
   console.log(timeStampToDate(11111))
+ function currentToEndTime(){  
+		var enddate =new Date();
+ 		var date=new Date();
+ 		enddate.setHours(23);
+ 		enddate.setMinutes(59);
+ 		enddate.setSeconds(59);
+	 	var miao = (enddate.getTime()-date.getTime())/1000;
+		return miao;
+	} 
+  console.log(currentToEndTime()/60)
   </script>
   </body>
 </html>

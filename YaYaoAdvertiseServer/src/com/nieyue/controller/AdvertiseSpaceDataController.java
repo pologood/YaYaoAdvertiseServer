@@ -60,7 +60,7 @@ public class AdvertiseSpaceDataController {
 			@RequestParam(value="endDailyDay")Date endDailyDay,
 			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
 			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
-			@RequestParam(value="orderName",required=false,defaultValue="advertise_data_id") String orderName,
+			@RequestParam(value="orderName",required=false,defaultValue="advertise_space_data_id") String orderName,
 			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
 		List<AdvertiseSpaceData> list = new ArrayList<AdvertiseSpaceData>();
 		list= advertiseSpaceDataService.browsePagingAdvertiseSpaceDataByAdvertiseSpaceIdAndDailyDays(advertiseSpaceId, startDailyDay, endDailyDay, orderName, orderWay);

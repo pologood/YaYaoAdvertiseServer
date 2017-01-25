@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.AdminDao">
 <!-- 添加管理员 -->
-<insert id="addAdmin" parameterType="Admin" flushCache="true"  >  
+<insert id="addAdmin" parameterType="Admin" keyProperty="adminId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  admin_tb 
    		 (name,

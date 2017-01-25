@@ -179,30 +179,26 @@ var advertiseSpace=(function(){
 
             //监听第一个
              document.querySelector('#ui'+thisAdvertiseSpaceConfig.advertise_space_id+" a:first-child").addEventListener('click',function(){
-             
-
-              //_this.DataDay.pvs++;
-             // localStorage.setItem("DataDay",JSON.stringify(_this.DataDay));
-              //setCookie("DataDay",_this.DataDay.pvs,5);
-             // console.log(getCookie("DataDay"));
-             //console.log(JSON.parse(localStorage.getItem("DataDay")).pvs)
-//             if(_this.DataDay.daily_day==''){
-//              _this.DataDay.daily_day=timeStampToDate(new Date());
-//              _this.DataDay.ips++;
-//             }else{
-//              if(!new Date( _this.DataDay.daily_day).getDay()==new Date().getDay() 
-//               ){
-//                 _this.DataDay.daily_day=timeStampToDate(new Date());
-//               _this.DataDay.ips++;
-//                
-//              }
-//             }
+   
+            	 var advertiseUv=0;//默认广告不是独立访客
+            	 var advertiseSpaceUv=0;//默认广告位不是独立访客
+            	 //只有不存在，才是新访客
+            	if(!getCookie("advertiseUv"+_this.advertise.advertise_id)){
+            		setCookie("advertiseUv"+_this.advertise.advertise_id, _this.advertise.advertise_id, currentToEndTime());
+            		advertiseUv=1;
+            	} 
+            	if(!getCookie("advertiseSpaceUv"+_this.config.advertise_space_id)){
+            		setCookie("advertiseSpaceUv"+_this.config.advertise_space_id, _this.config.advertise_space_id, currentToEndTime());
+            		advertiseSpaceUv=1;
+            	} 
                myAjax({
                   url: "/advertise/click",     //请求地址
                   type: "POST",                       //请求方式
                   data: {
                     advertiseId:_this.advertise.advertise_id,
-                    advertiseSpaceId:_this.config.advertise_space_id
+                    advertiseSpaceId:_this.config.advertise_space_id,
+                    advertiseUv:advertiseUv,
+                    advertiseSpaceUv:advertiseSpaceUv
                     },        //请求参数
                   dataType: "json",
                   success: function (response, xml) {
@@ -272,6 +268,20 @@ var advertiseSpace=(function(){
     s = date.getSeconds(); 
   return Y+M+D+h+m+s; 
   }
+  /**
+   * 获取当前时间到当日23:59:59的时间差
+   * 单位 秒
+   * 
+   */
+  function currentToEndTime(){  
+		var enddate =new Date();
+		var date=new Date();
+		enddate.setHours(23);
+		enddate.setMinutes(59);
+		enddate.setSeconds(59);
+	 	var miao = (enddate.getTime()-date.getTime())/1000;
+		return miao;
+	} 
   /**
 **复制对象
 */

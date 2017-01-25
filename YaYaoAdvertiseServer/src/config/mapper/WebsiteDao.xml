@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.WebsiteDao">
 <!-- 添加网站 -->
-<insert id="addWebsite" parameterType="Website" flushCache="true"  >  
+<insert id="addWebsite" parameterType="Website" keyProperty="websiteId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  website_tb 
    		 (name,

@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.RoleDao">
 <!-- 添加角色 -->
-<insert id="addRole" parameterType="Role" flushCache="true"  >  
+<insert id="addRole" parameterType="Role" keyProperty="roleId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  role_tb 
    		 (name,duty,update_date)

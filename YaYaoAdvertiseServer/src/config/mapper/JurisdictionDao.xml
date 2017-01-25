@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.JurisdictionDao">
 <!-- 添加权限 -->
-<insert id="addJurisdiction" parameterType="Jurisdiction" flushCache="true"  >  
+<insert id="addJurisdiction" parameterType="Jurisdiction" keyProperty="jurisdictionId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  jurisdiction_tb 
    		 (name,

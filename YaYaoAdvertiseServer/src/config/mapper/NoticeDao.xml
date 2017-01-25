@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.NoticeDao">
 <!-- 添加公告 -->
-<insert id="addNotice" parameterType="Notice" flushCache="true"  >  
+<insert id="addNotice" parameterType="Notice" keyProperty="noticeId" flushCache="true"  >  
    INSERT IGNORE INTO
    		notice_tb 
    		 (title,type,content,update_date)

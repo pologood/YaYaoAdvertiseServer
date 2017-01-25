@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.AdvertiseRelateDao">
 <!-- 添加广告位广告关系 -->
-<insert id="addAdvertiseRelate" parameterType="AdvertiseRelate" flushCache="true"  >  
+<insert id="addAdvertiseRelate" parameterType="AdvertiseRelate" keyProperty="advertiseRelateId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  advertise_relate_tb 
    		 (

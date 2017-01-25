@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 <mapper namespace="com.nieyue.dao.AdvertiseSpaceDao">
 <!-- 添加广告位 -->
-<insert id="addAdvertiseSpace" parameterType="AdvertiseSpace" flushCache="true"  >  
+<insert id="addAdvertiseSpace" parameterType="AdvertiseSpace" keyProperty="advertiseSpaceId" flushCache="true"  >  
    INSERT IGNORE INTO
    		  advertise_space_tb 
    		 (name,
