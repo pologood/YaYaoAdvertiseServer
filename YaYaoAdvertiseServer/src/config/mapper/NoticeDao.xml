@@ -15,7 +15,7 @@
 <!-- 更新公告 -->
 <update id="updateNotice" parameterType="Notice" >  
     UPDATE 
-    	Notice_tb 
+    	notice_tb 
     SET 
     	title=#{title},
     	type=#{type},

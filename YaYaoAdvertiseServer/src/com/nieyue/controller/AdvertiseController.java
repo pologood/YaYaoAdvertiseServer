@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
@@ -363,7 +364,7 @@ public class AdvertiseController {
 		if(timer==10){
 			list = advertiseService.browsePagingAdvertiseSpaceShowAdvertiseBei(advertiseSpace.getUnitPrice()+0.1,"投放中");
 			if(list.size()>0){				
-			advertise=list.get(0);
+			advertise=list.get(new Random().nextInt(list.size()));
 			}
 			break;
 		}
